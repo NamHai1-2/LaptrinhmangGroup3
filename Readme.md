@@ -1,4 +1,4 @@
-## 📂 Cấu trúc dự án (Project Structure)
+## 📂 Cấu trúc file CODE của dự án 
 
 ```text
 TCP_Chat_Solution/
