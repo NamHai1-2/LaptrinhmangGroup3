@@ -57,14 +57,14 @@ namespace _2_ChatServer.Network
         {
             NetworkStream stream = client.GetStream();
             byte[] buffer = new byte[Constants.BUFFER_SIZE];
-            string currentUsername = string.Empty; // Lưu tên của người đang kết nối ở luồng này
+            string currentUsername = string.Empty; 
 
             try
             {
                 while (true)
                 {
                     int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    if (bytesRead == 0) break; // Khách đột ngột rút dây mạng
+                    if (bytesRead == 0) break; 
 
                     string json = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                     var packet = JsonSerializer.Deserialize<MessagePacket>(json);
@@ -72,7 +72,7 @@ namespace _2_ChatServer.Network
 
                     if (packet.Command == CommandType.Login)
                     {
-                        bool isOk = _db.CheckLogin(packet.Sender, packet.Content); // Content là Password
+                        bool isOk = _db.CheckLogin(packet.Sender, packet.Content); 
                         if (isOk)
                         {
                             currentUsername = packet.Sender;
@@ -113,7 +113,7 @@ namespace _2_ChatServer.Network
                 {
                     _onlineUsers.Remove(currentUsername);
                     OnLogEvent?.Invoke($"[THOÁT] User '{currentUsername}' đã rời khỏi hệ thống.");
-                    BroadcastUserList(); // Cập nhật lại danh sách cho những người còn lại
+                    BroadcastUserList(); 
                 }
                 client.Close();
             }
