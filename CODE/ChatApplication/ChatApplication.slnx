@@ -1,1 +1,5 @@
-<Solution />
+<Solution>
+  <Project Path="1_SharedLibrary/1_SharedLibrary.csproj" />
+  <Project Path="2_ChatServer/2_ChatServer.csproj" />
+  <Project Path="3_ChatClient/3_ChatClient.csproj" />
+</Solution>
