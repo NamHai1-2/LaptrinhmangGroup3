@@ -1,0 +1,373 @@
+GIỚI THIỆU MÔN HỌC
+Môn học lập trình mạng là một trong những học phần quan trọng trong lĩnh vực Computer Networking, đóng vai trò nền tảng trong việc xây dựng các hệ thống phần mềm hiện đại có khả năng giao tiếp và trao đổi dữ liệu qua mạng. Trong bối cảnh công nghệ thông tin phát triển mạnh mẽ, hầu hết các ứng dụng ngày nay như mạng xã hội, ứng dụng nhắn tin, hệ thống thương mại điện tử hay các dịch vụ đám mây đều hoạt động dựa trên nguyên lý của lập trình mạng. Vì vậy, việc hiểu và nắm vững môn học này không chỉ giúp sinh viên có cái nhìn tổng quan về cách Internet vận hành mà còn tạo tiền đề để phát triển các ứng dụng thực tế phục vụ đời sống.
+Nội dung của môn lập trình mạng thường bắt đầu với các kiến thức cơ bản về mạng máy tính, bao gồm các mô hình như OSI và TCP/IP, cũng như các giao thức phổ biến như HTTP, FTP, TCP và UDP. Những kiến thức này giúp người học hiểu được cách dữ liệu được đóng gói, truyền tải và xử lý giữa các thiết bị trong mạng. Tiếp theo, sinh viên sẽ được tiếp cận với khái niệm socket – một công cụ quan trọng cho phép các chương trình thiết lập kết nối và giao tiếp với nhau. Thông qua việc lập trình socket, người học có thể xây dựng các mô hình giao tiếp như client-server, trong đó một máy đóng vai trò cung cấp dịch vụ (server) và máy còn lại gửi yêu cầu (client). Đây là mô hình phổ biến được sử dụng trong hầu hết các hệ thống hiện nay.
+Bên cạnh đó, môn học cũng hướng dẫn cách truyền nhận dữ liệu qua hai giao thức chính là TCP và UDP. TCP đảm bảo tính tin cậy của dữ liệu, phù hợp với các ứng dụng yêu cầu độ chính xác cao như truyền file hoặc giao dịch trực tuyến, trong khi UDP lại ưu tiên tốc độ, thường được sử dụng trong các ứng dụng thời gian thực như streaming hoặc game online. Ngoài lý thuyết, sinh viên còn được thực hành xây dựng các ứng dụng mạng cơ bản như chương trình chat, web server đơn giản hoặc hệ thống truyền file. Qua đó, người học không chỉ hiểu rõ cách thức hoạt động của mạng mà còn nâng cao kỹ năng lập trình và tư duy giải quyết vấn đề.
+Môn lập trình mạng có thể được triển khai bằng nhiều ngôn ngữ lập trình khác nhau như C/C++, Java, Python hay JavaScript với Node.js, tùy thuộc vào mục tiêu và định hướng của chương trình đào tạo. Mỗi ngôn ngữ mang lại những cách tiếp cận khác nhau, nhưng đều hướng đến mục tiêu chung là giúp chương trình có thể giao tiếp hiệu quả qua mạng. Tuy nhiên, đây cũng là một môn học tương đối thử thách vì đòi hỏi người học phải kết hợp kiến thức về lập trình và hiểu biết về hệ thống mạng.
+Tóm lại, lập trình mạng là môn học mang tính ứng dụng cao, giúp sinh viên tiếp cận gần hơn với các công nghệ cốt lõi của Internet. Việc nắm vững môn học này sẽ mở ra nhiều cơ hội trong các lĩnh vực như phát triển phần mềm, an ninh mạng, hệ thống nhúng và điện toán đám mây. Đây chính là bước đệm quan trọng để sinh viên trở thành những kỹ sư công nghệ thông tin có khả năng xây dựng và vận hành các hệ thống hiện đại trong thời đại số.
+
+CHƯƠNG 1 GIỚI THIỆU ĐỀ TÀI
+1.	Lý do chọn đề tài
+Đề tài “Lập trình ứng dụng chat (GUI) qua TCP Confirmed” là một lựa chọn phù hợp và có tính thực tiễn cao trong lĩnh vực Computer Networking. Việc lựa chọn đề tài này xuất phát từ nhiều lý do quan trọng, vừa mang tính học thuật vừa có giá trị ứng dụng thực tế.
+Trước hết, ứng dụng chat là một trong những hệ thống phổ biến nhất trong đời sống hiện đại. Các nền tảng như Zalo, Messenger hay Telegram đều hoạt động dựa trên nguyên lý truyền thông dữ liệu qua mạng. Do đó, việc xây dựng một ứng dụng chat giúp người học dễ dàng hình dung và tiếp cận các khái niệm trừu tượng trong lập trình mạng thông qua một bài toán quen thuộc, gần gũi.
+Thứ hai, đề tài này cho phép sinh viên áp dụng mô hình client-server – một mô hình cốt lõi trong lập trình mạng. Thông qua việc thiết kế hệ thống gồm nhiều client kết nối đến server trung tâm, người học sẽ hiểu rõ cách thiết lập kết nối, quản lý nhiều luồng (multi-threading) và xử lý đồng thời nhiều yêu cầu từ người dùng. Đây là những kỹ năng rất quan trọng trong việc phát triển các hệ thống phần mềm thực tế.
+Bên cạnh đó, việc sử dụng giao thức TCP (Transmission Control Protocol) mang lại lợi thế lớn về độ tin cậy trong truyền dữ liệu. TCP đảm bảo dữ liệu được gửi đi sẽ đến đúng nơi, đúng thứ tự và không bị mất mát. Điều này đặc biệt quan trọng đối với ứng dụng chat, nơi mà nội dung tin nhắn cần được truyền tải chính xác và đầy đủ. Cơ chế “confirmed” (xác nhận) còn giúp tăng cường độ tin cậy, đảm bảo rằng cả bên gửi và bên nhận đều biết trạng thái của dữ liệu, từ đó nâng cao chất lượng hệ thống.
+Ngoài ra, việc xây dựng giao diện người dùng (GUI) giúp đề tài trở nên trực quan và thân thiện hơn. Người dùng có thể dễ dàng thao tác, gửi và nhận tin nhắn thông qua các thành phần như cửa sổ chat, ô nhập liệu và danh sách người dùng. Điều này không chỉ nâng cao trải nghiệm người dùng mà còn giúp sinh viên làm quen với việc kết hợp giữa lập trình giao diện và lập trình mạng – một kỹ năng cần thiết trong phát triển phần mềm hiện đại.
+Một lý do quan trọng khác là đề tài này có tính mở rộng cao. Từ một ứng dụng chat cơ bản, có thể phát triển thêm nhiều tính năng như gửi file, chat nhóm, mã hóa dữ liệu, lưu trữ lịch sử tin nhắn hoặc tích hợp bảo mật. Điều này giúp sinh viên có cơ hội sáng tạo và nâng cao đề tài theo nhiều hướng khác nhau.
+Tóm lại, việc chọn đề tài “Lập trình ứng dụng chat (GUI) qua TCP Confirmed” không chỉ giúp củng cố kiến thức về lập trình mạng mà còn phát triển kỹ năng thực hành, tư duy hệ thống và khả năng xây dựng ứng dụng thực tế. Đây là một đề tài tiêu biểu, cân bằng giữa lý thuyết và ứng dụng, rất phù hợp cho sinh viên trong quá trình học tập và nghiên cứu.
+2.	Mục tiêu đề tài
+Mục tiêu chính của đề tài là xây dựng một ứng dụng chat có giao diện đồ họa (GUI) hoạt động theo mô hình client-server, sử dụng giao thức TCP với cơ chế xác nhận (confirmed) để đảm bảo việc truyền dữ liệu chính xác và đáng tin cậy.
+Cụ thể, đề tài hướng đến các mục tiêu sau:
+Trước hết, giúp người học hiểu rõ nguyên lý hoạt động của lập trình mạng, đặc biệt là cách thức giao tiếp giữa các máy tính thông qua giao thức TCP. Thông qua việc xây dựng ứng dụng, sinh viên sẽ nắm được quy trình thiết lập kết nối, gửi và nhận dữ liệu, cũng như cách xử lý các tình huống phát sinh trong quá trình truyền thông.
+Tiếp theo, đề tài nhằm áp dụng mô hình client-server vào thực tế. Người học sẽ thiết kế và triển khai hệ thống gồm một server trung tâm và nhiều client kết nối, từ đó hiểu rõ cách quản lý nhiều kết nối đồng thời và xử lý đa luồng trong chương trình.
+Một mục tiêu quan trọng khác là xây dựng giao diện người dùng (GUI) thân thiện, cho phép người dùng dễ dàng thực hiện các thao tác như nhập tin nhắn, gửi/nhận dữ liệu và theo dõi nội dung hội thoại. Điều này giúp kết hợp giữa kỹ năng lập trình giao diện và lập trình mạng.
+Ngoài ra, đề tài còn hướng đến việc triển khai cơ chế “confirmed” (xác nhận dữ liệu), đảm bảo rằng mỗi tin nhắn gửi đi đều được kiểm tra và phản hồi từ phía nhận. Qua đó, nâng cao độ tin cậy của hệ thống và giúp người học hiểu sâu hơn về kiểm soát lỗi trong truyền dữ liệu.
+Bên cạnh đó, đề tài cũng giúp rèn luyện kỹ năng lập trình tổng hợp như tổ chức chương trình, xử lý lỗi, kiểm thử và tối ưu hệ thống. Đây là những kỹ năng cần thiết trong quá trình phát triển phần mềm thực tế.
+Cuối cùng, đề tài tạo nền tảng để phát triển các hệ thống phức tạp hơn trong tương lai như ứng dụng chat nhóm, truyền file, mã hóa dữ liệu hoặc tích hợp bảo mật, góp phần định hướng nghề nghiệp trong các lĩnh vực như phát triển phần mềm, hệ thống mạng và an ninh thông tin.
+3.	Phạm vi đề tài
+Phạm vi của đề tài tập trung vào việc xây dựng một ứng dụng chat cơ bản có giao diện đồ họa (GUI), hoạt động theo mô hình client-server và sử dụng giao thức TCP để truyền dữ liệu với cơ chế xác nhận (confirmed). Cụ thể, đề tài được giới hạn trong các nội dung sau:
+Trước hết, về chức năng hệ thống, ứng dụng cho phép nhiều client kết nối đến một server trung tâm để thực hiện việc gửi và nhận tin nhắn văn bản theo thời gian thực. Người dùng có thể nhập nội dung, gửi tin nhắn và nhận phản hồi từ phía server hoặc các client khác. Hệ thống đảm bảo mỗi tin nhắn được gửi đi đều có cơ chế xác nhận từ phía nhận.
+Về mặt kỹ thuật, đề tài tập trung vào việc sử dụng lập trình socket dựa trên giao thức TCP để thiết lập và duy trì kết nối giữa các thành phần trong hệ thống. Ngoài ra, hệ thống có thể áp dụng xử lý đa luồng (multi-threading) để phục vụ nhiều client cùng lúc. Phần giao diện người dùng (GUI) được xây dựng ở mức cơ bản, đảm bảo dễ sử dụng nhưng không yêu cầu quá phức tạp về thiết kế.
+Về môi trường triển khai, ứng dụng được xây dựng và chạy trên môi trường mạng cục bộ (LAN) hoặc trên cùng một máy tính (localhost) nhằm phục vụ mục đích học tập và thử nghiệm. Đề tài không yêu cầu triển khai trên Internet diện rộng hoặc tích hợp với các hệ thống lớn.
+Bên cạnh đó, đề tài không đi sâu vào các vấn đề nâng cao như mã hóa dữ liệu, bảo mật hệ thống, xác thực người dùng phức tạp hoặc tối ưu hiệu năng ở quy mô lớn. Các chức năng mở rộng như gửi file, chat nhóm nâng cao, lưu trữ lịch sử tin nhắn lâu dài cũng không nằm trong phạm vi chính, mà chỉ được đề cập như hướng phát triển trong tương lai.
+Cuối cùng, đề tài tập trung vào việc minh họa nguyên lý hoạt động của lập trình mạng và xây dựng một ứng dụng mẫu hoàn chỉnh ở mức cơ bản, phục vụ mục tiêu học tập và nghiên cứu, hơn là phát triển một sản phẩm thương mại hoàn chỉnh.
+CHƯƠNG 2 CƠ SỞ LÝ THUYẾT
+1.	Tổng quan về lập trình mạng
+a)	Khái niệm
+-	Lập trình mạng là một nhánh quan trọng của Computer Networking, tập trung vào việc phát triển các ứng dụng có khả năng giao tiếp và trao đổi dữ liệu giữa các thiết bị thông qua hệ thống mạng. Trong thời đại Internet phát triển mạnh mẽ, hầu hết các phần mềm hiện nay như ứng dụng web, mạng xã hội, hệ thống email hay các nền tảng thương mại điện tử đều hoạt động dựa trên nền tảng của lập trình mạng.
+-	Về bản chất, lập trình mạng cho phép các máy tính kết nối với nhau, gửi và nhận dữ liệu theo những quy tắc nhất định. Nhờ đó, thông tin có thể được truyền đi nhanh chóng, chính xác và hiệu quả giữa các thiết bị ở bất kỳ đâu. Đây là nền tảng để xây dựng các hệ thống phân tán, điện toán đám mây và các dịch vụ trực tuyến hiện đại.
+b)	Vai trò của giao thức trong truyền thông
+-	Giao thức mạng đóng vai trò như “ngôn ngữ chung” giúp các thiết bị trong mạng có thể hiểu và giao tiếp với nhau. Nếu không có giao thức, việc truyền dữ liệu sẽ trở nên hỗn loạn vì mỗi hệ thống có thể sử dụng cách thức khác nhau để gửi và nhận thông tin.
+-	Cụ thể, giao thức đảm nhận các vai trò sau:
++ Giao thức quy định cách đóng gói và truyền dữ liệu. Dữ liệu khi được gửi đi sẽ được chia thành các gói tin (packet), mỗi gói chứa thông tin cần thiết như địa chỉ nguồn, địa chỉ đích và nội dung. Điều này giúp dữ liệu có thể truyền qua mạng một cách có tổ chức.
++ Giao thức đảm bảo độ tin cậy trong truyền thông. Ví dụ, TCP cung cấp cơ chế kiểm tra lỗi, xác nhận dữ liệu và truyền lại nếu xảy ra mất mát. Nhờ đó, dữ liệu đến nơi một cách đầy đủ và đúng thứ tự. Ngược lại, UDP không đảm bảo độ tin cậy nhưng lại có tốc độ truyền nhanh hơn, phù hợp với các ứng dụng thời gian thực.
++ Giao thức còn giúp kiểm soát luồng dữ liệu và tránh tình trạng quá tải mạng. Nó điều chỉnh tốc độ truyền phù hợp với khả năng của hệ thống, đảm bảo quá trình giao tiếp diễn ra ổn định.
++ Giao thức giúp tiêu chuẩn hóa việc truyền thông giữa các hệ thống khác nhau, cho phép các thiết bị sử dụng phần cứng và phần mềm khác nhau vẫn có thể kết nối và làm việc với nhau.
+2.	Mô hình Client – Server
+Mô hình Client – Server là một kiến trúc phổ biến trong Computer Networking, trong đó hệ thống được chia thành hai thành phần chính: client (máy khách) và server (máy chủ). Client gửi yêu cầu (request) đến server, và server sẽ xử lý yêu cầu đó rồi trả về phản hồi (response). Mô hình này được sử dụng rộng rãi trong các ứng dụng như web, email và đặc biệt là ứng dụng chat.
+a)	Khái niệm Client
+-	Client là chương trình hoặc thiết bị đóng vai trò gửi yêu cầu đến server để sử dụng dịch vụ. Trong ứng dụng chat, client chính là phần mềm mà người dùng trực tiếp tương tác.
+-	Ví dụ:
+•	Người dùng nhập tin nhắn và nhấn “Gửi” 
+•	Client sẽ gửi dữ liệu đó đến server 
+Đặc điểm của client:
+•	Giao diện thân thiện với người dùng (GUI) 
+•	Chủ động gửi yêu cầu 
+•	Không cần xử lý phức tạp
+
+b)	Khái niệm Server
+-	Server là chương trình hoặc hệ thống có nhiệm vụ tiếp nhận, xử lý yêu cầu từ client và trả kết quả.
+-	Trong ứng dụng chat, server sẽ:
+•	Nhận tin nhắn từ client 
+•	Xử lý (kiểm tra, lưu trữ nếu cần) 
+•	Gửi tin nhắn đến client khác 
+-	Đặc điểm của server:
+•	Luôn hoạt động và chờ kết nối 
+•	Xử lý nhiều client cùng lúc 
+•	Có khả năng quản lý dữ liệu và kết nối
+c)	Cách Client và Server giao tiếp
+Quá trình giao tiếp giữa client và server thường diễn ra theo các bước:
+-	Server khởi động và lắng nghe tại một địa chỉ IP và port 
+-	Client gửi yêu cầu kết nối đến server 
+-	Thiết lập kết nối (thường dùng TCP) 
+-	Trao đổi dữ liệu: 
+o	Client gửi dữ liệu (tin nhắn) 
+o	Server nhận và xử lý 
+o	Server gửi phản hồi lại 
+-	Đóng kết nối khi hoàn tất 
+Trong ứng dụng chat:
+•	Client A gửi tin → Server 
+•	Server chuyển tin → Client B
+d)	Ưu điểm của mô hình client-server trong ứng dụng chat
+-	Mô hình này mang lại nhiều lợi ích quan trọng:
++ Quản lý tập trung
+Server đóng vai trò trung tâm giúp:
+•	Kiểm soát dữ liệu 
+•	Quản lý người dùng 
+•	Điều phối tin nhắn 
++ Dễ mở rộng
+•	Có thể thêm nhiều client mà không cần thay đổi hệ thống 
+•	Có thể nâng cấp server để phục vụ nhiều người hơn 
++ Đảm bảo tính nhất quán
+•	Dữ liệu được xử lý tại một nơi → giảm lỗi 
+•	Tin nhắn được truyền chính xác 
++ Bảo mật tốt hơn
+•	Server có thể kiểm tra, xác thực người dùng 
+•	Dễ triển khai các cơ chế bảo mật 
++ Phù hợp với ứng dụng chat
+•	Truyền tin nhanh chóng 
+•	Hỗ trợ nhiều người dùng cùng lúc 
+•	Dễ triển khai các tính năng như chat nhóm, lưu lịch sử
+3. Giao thức TCP
+a) Khái niệm
+TCP (Transmission Control Protocol) là một giao thức quan trọng trong Computer Networking, được sử dụng để truyền dữ liệu giữa các thiết bị trong mạng một cách đáng tin cậy và có kiểm soát. TCP hoạt động ở tầng giao vận (Transport Layer) trong mô hình TCP/IP và thường được sử dụng trong các ứng dụng yêu cầu độ chính xác cao như web, email và ứng dụng chat.
+b) Đặc điểm 
+- Hướng kết nối (Connection-oriented)
+•	Trước khi truyền dữ liệu, TCP phải thiết lập kết nối giữa hai bên (client và server) thông qua quá trình bắt tay 3 bước (3-way handshake) 
+•	Điều này đảm bảo hai bên sẵn sàng giao tiếp 
+-	Tin cậy (Reliable)
+•	TCP đảm bảo dữ liệu được gửi đến nơi đầy đủ và chính xác 
+•	Nếu có mất mát dữ liệu, TCP sẽ tự động gửi lại 
+-	Đảm bảo thứ tự dữ liệu
+•	Dữ liệu được chia thành các gói nhỏ 
+•	TCP đảm bảo các gói đến đúng thứ tự ban đầu 
+•	Nếu gói đến sai thứ tự → sẽ được sắp xếp lại 
+-	Kiểm soát lỗi
+•	TCP sử dụng cơ chế kiểm tra lỗi (checksum) 
+•	Nếu phát hiện lỗi → yêu cầu gửi lại dữ liệu 
+•	Có cơ chế ACK (Acknowledgement) để xác nhận đã nhận 
+c)	So sánh TCP và UDP
+Tiêu chí 	TCP	UDP
+Kiểu kết nối 	Có kết nối 	Không kết nối
+Độ tin cậy 	Cao 	Thấp
+Tốc độ	Chậm hơn 	Nhanh hơn
+Đảm bảo thứ tự	Có 	Không 
+Kiểm soát lỗi 	Có 	Hạn chế
+Ứng dụng 	Web, chat, email	Game, video 
+d)	Lý do chọn TCP cho ứng dụng chat 	
+-	Việc lựa chọn TCP cho ứng dụng chat là hoàn toàn hợp lý vì các lý do sau:
+-	Trước hết, ứng dụng chat yêu cầu dữ liệu phải chính xác và đầy đủ. Nếu tin nhắn bị mất hoặc sai nội dung sẽ gây ảnh hưởng trực tiếp đến trải nghiệm người dùng. TCP đảm bảo mọi tin nhắn đều được truyền đến nơi.
+-	Thứ hai, TCP đảm bảo thứ tự tin nhắn. Trong hội thoại, thứ tự các tin nhắn rất quan trọng. TCP giúp đảm bảo tin nhắn hiển thị đúng trình tự gửi.
+-	Ngoài ra, cơ chế xác nhận (ACK) của TCP phù hợp với mô hình “confirmed” trong đề tài, giúp hệ thống biết được tin nhắn đã được nhận thành công hay chưa.
+-	Bên cạnh đó, TCP giúp giảm thiểu lỗi truyền dữ liệu thông qua cơ chế kiểm soát lỗi và truyền lại, giúp ứng dụng hoạt động ổn định hơn.
+-	Cuối cùng, mặc dù TCP có thể chậm hơn UDP, nhưng đối với ứng dụng chat, độ tin cậy quan trọng hơn tốc độ, do đó TCP là lựa chọn phù hợp.
+4. Giao diện GUI	
+a) Khái niệm
+GUI (Graphical User Interface) là giao diện người dùng đồ họa, cho phép người dùng tương tác với phần mềm thông qua các thành phần trực quan như cửa sổ, nút bấm, hộp nhập liệu, danh sách… thay vì sử dụng dòng lệnh. Trong lĩnh vực Computer Networking, GUI giúp các ứng dụng mạng trở nên dễ sử dụng, thân thiện và trực quan hơn.
+b) Vai trò của GUI trong ứng dụng chat
+Trong ứng dụng chat, GUI giữ vai trò rất quan trọng vì đây là phần người dùng trực tiếp sử dụng. Cụ thể:
+•	Giúp người dùng gửi và nhận tin nhắn dễ dàng 
+•	Hiển thị nội dung hội thoại rõ ràng, trực quan 
+•	Tăng trải nghiệm người dùng (UX) 
+•	Giúp thao tác nhanh, tiện lợi (nhấn nút, nhập liệu) 
+•	Làm cho ứng dụng chuyên nghiệp, dễ tiếp cận hơn 
+Nếu không có GUI, người dùng phải thao tác bằng dòng lệnh, gây khó khăn và kém hiệu quả.
+     c) Các thành phần giao diện thường dung
+- Cửa sổ chính
+•	Là giao diện tổng thể của ứng dụng 
+•	Chứa tất cả các thành phần khác 
+•	Có thể có tiêu đề, thanh menu, khu vực nội dung 
+-	Ô nhập nội dung (Input box)
+•	Nơi người dùng nhập tin nhắn 
+•	Thường là TextField hoặc TextArea 
+•	Cho phép chỉnh sửa nội dung trước khi gửi 
+-	Vùng hiển thị tin nhắn (Chat display)
+•	Hiển thị toàn bộ nội dung hội thoại 
+•	Bao gồm: 
+o	Tin nhắn đã gửi 
+o	Tin nhắn nhận được 
+•	Thường có thanh cuộn để xem lịch sử 
+-	Nút gửi (Send button)
+•	Dùng để gửi tin nhắn đến server 
+•	Khi nhấn, nội dung trong ô nhập sẽ được truyền đi 
+•	Có thể kết hợp với phím Enter để gửi nhanh 
+-	Danh sách người dùng (User list)
+•	Hiển thị các người đang online 
+•	Giúp lựa chọn người để chat (nếu có chat riêng) 
+•	Tăng khả năng tương tác giữa người dung
+5. Đa luồng trong ứng dụng chat
+Trong quá trình phát triển ứng dụng chat thuộc lĩnh vực Computer Networking, đa luồng (multi-threading) là một kỹ thuật quan trọng giúp chương trình hoạt động mượt mà và hiệu quả hơn. Đa luồng cho phép một chương trình thực hiện nhiều công việc cùng lúc thay vì xử lý tuần tự từng nhiệm vụ.
+CHƯƠNG 3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
+1. Yêu cầu hệ thống
+1.1 Yêu cầu chức năng
+- Hệ thống ứng dụng chat được xây dựng nhằm đáp ứng các chức năng cơ bản của một chương trình nhắn tin hoạt động theo mô hình client-server. Trước hết, hệ thống cho phép người dùng đăng nhập bằng tên người dùng trước khi tham gia vào phòng chat. Tên người dùng giúp phân biệt các client trong quá trình trao đổi thông tin, đồng thời hỗ trợ việc hiển thị danh tính người gửi trong nội dung hội thoại.
+- Sau khi nhập tên, người dùng có thể kết nối đến server thông qua địa chỉ IP và số port đã được cấu hình. Đây là bước quan trọng để thiết lập kênh giao tiếp giữa client và server, tạo điều kiện cho việc trao đổi dữ liệu qua giao thức TCP.
+- Khi kết nối thành công, người dùng có thể thực hiện chức năng gửi tin nhắn đến server. Sau đó, server tiếp nhận và phân phối tin nhắn đến các client khác đang tham gia hệ thống. Song song với đó, client cũng phải có khả năng nhận tin nhắn từ server và hiển thị nội dung nhận được kịp thời trên giao diện.
+- Một chức năng quan trọng khác là hiển thị nội dung chat trên giao diện. Toàn bộ tin nhắn gửi đi và nhận về cần được hiển thị rõ ràng trong khung chat để người dùng có thể theo dõi nội dung hội thoại một cách liên tục và trực quan.
+- Ngoài ra, hệ thống cần có chức năng thông báo khi người dùng tham gia hoặc rời khỏi phòng chat. Điều này giúp những người đang sử dụng ứng dụng biết được trạng thái kết nối của các thành viên khác, từ đó tăng tính tương tác trong quá trình trò chuyện.
+- Cuối cùng, chương trình phải hỗ trợ chức năng thoát ứng dụng. Khi người dùng chọn thoát, client cần ngắt kết nối với server một cách an toàn, đồng thời giải phóng tài nguyên đang sử dụng để tránh lỗi hoặc mất ổn định hệ thống.
+1.2 Yêu cầu phi chức năng
+- Bên cạnh các yêu cầu chức năng, hệ thống còn cần đáp ứng một số yêu cầu phi chức năng để đảm bảo chất lượng sử dụng. Trước hết, ứng dụng phải có giao diện thân thiện, dễ dùng, bố cục rõ ràng, giúp người dùng thao tác dễ dàng ngay cả khi không có nhiều kiến thức kỹ thuật.
+- Hệ thống cũng cần đảm bảo truyền dữ liệu ổn định trong quá trình hoạt động. - Các tin nhắn cần được gửi và nhận chính xác, hạn chế tối đa tình trạng mất gói hoặc sai lệch nội dung trong quá trình truyền tải.
+- Ngoài ra, chương trình phải có khả năng phản hồi nhanh, đặc biệt trong quá trình gửi và nhận tin nhắn. Khi người dùng gửi nội dung, tin nhắn cần được xử lý và hiển thị gần như ngay lập tức để đảm bảo tính thời gian thực của ứng dụng chat.
+- Cuối cùng, hệ thống cần được thiết kế theo hướng dễ bảo trì, dễ nâng cấp. Mã nguồn phải được tổ chức hợp lý, chia thành các thành phần rõ ràng để thuận tiện cho việc sửa lỗi, bổ sung chức năng mới hoặc mở rộng hệ thống trong tương lai.
+2. Phân tích hoạt động hệ thống
+- Hệ thống hoạt động theo mô hình client-server, trong đó server đóng vai trò trung tâm tiếp nhận và xử lý các kết nối từ nhiều client khác nhau. Khi server khởi động, nó sẽ mở cổng và liên tục lắng nghe yêu cầu kết nối từ các client. - Mỗi khi có một client mới tham gia, server sẽ chấp nhận kết nối và tạo cơ chế xử lý riêng cho client đó.
+- Luồng xử lý giữa client và server
+- Luồng xử lý chính bắt đầu khi client nhập tên người dùng, địa chỉ IP và port, sau đó gửi yêu cầu kết nối đến server. Nếu kết nối thành công, client sẽ chuyển sang trạng thái sẵn sàng gửi và nhận dữ liệu. Khi người dùng nhập tin nhắn và nhấn nút gửi, client sẽ đóng gói nội dung tin nhắn rồi truyền đến server thông qua giao thức TCP. Server sau khi nhận được tin nhắn sẽ xử lý và chuyển tiếp nội dung đó đến các client còn lại trong hệ thống.
+- Cách server quản lý nhiều client
+- Để phục vụ nhiều người dùng cùng lúc, server cần sử dụng cơ chế đa luồng hoặc cấu trúc quản lý kết nối phù hợp. Mỗi client khi kết nối đến server sẽ được quản lý riêng, thường thông qua một luồng xử lý độc lập. Server lưu danh sách các client đang hoạt động để có thể gửi thông báo hoặc chuyển tiếp tin nhắn đến đúng đối tượng. Khi một client ngắt kết nối, server sẽ loại client đó ra khỏi danh sách quản lý và gửi thông báo đến các thành viên còn lại.
+- Cách client gửi/nhận dữ liệu
+- Phía client thường được chia thành hai luồng chính: một luồng phụ trách gửi dữ liệu và một luồng phụ trách nhận dữ liệu. Luồng gửi sẽ lấy nội dung từ ô nhập tin nhắn và truyền đến server khi người dùng thao tác. Luồng nhận sẽ luôn chạy nền để lắng nghe dữ liệu từ server, sau đó cập nhật nội dung lên khung chat. Cách xử lý này giúp ứng dụng hoạt động mượt mà và tránh hiện tượng treo giao diện khi đang chờ dữ liệu.
+3. Thiết kế kiến trúc hệ thống
+- Sơ đồ tổng thể hệ thống
+- Kiến trúc tổng thể của hệ thống gồm một server trung tâm và nhiều client kết nối đến. Server có nhiệm vụ tiếp nhận kết nối, quản lý người dùng và chuyển tiếp tin nhắn. Các client đóng vai trò giao tiếp với người dùng thông qua giao diện đồ họa, đồng thời gửi và nhận dữ liệu với server.
+- Mô hình tổng quát có thể mô tả như sau:
+Client 1 ↔
+Client 2 ↔ Server ↔ Client 3
+Client n ↔
+Mô hình: 1 server – nhiều client
+-	Trong hệ thống này chỉ có một server hoạt động ở trung tâm để điều phối toàn bộ quá trình trao đổi dữ liệu. Nhiều client có thể kết nối cùng lúc đến server, tạo thành một môi trường chat nhiều người dùng. Mô hình này phù hợp với yêu cầu của đề tài vì dễ triển khai, dễ quản lý và phản ánh đúng nguyên lý hoạt động của ứng dụng chat thực tế.
+-	Vai trò từng thành phần
+-	Server có vai trò lắng nghe kết nối, tiếp nhận client, nhận dữ liệu từ client gửi đến, phát tán tin nhắn đến các client khác và thông báo trạng thái tham gia hoặc rời khỏi của người dùng.
+-	Client là nơi người dùng trực tiếp thao tác. Client thực hiện việc nhập tên, thiết lập kết nối, gửi tin nhắn, nhận tin nhắn và hiển thị nội dung lên giao diện.
+-	Giao thức TCP chịu trách nhiệm thiết lập kết nối tin cậy giữa client và server, đảm bảo dữ liệu được truyền đúng thứ tự, đầy đủ và ít lỗi.
+4. Thiết kế giao diện
+- Giao diện server
+- Giao diện server được thiết kế đơn giản, chủ yếu phục vụ việc khởi động hệ thống và theo dõi hoạt động của các client. Trên giao diện server có thể bao gồm các thành phần như ô nhập port, nút khởi động server, vùng hiển thị trạng thái kết nối và khung log để theo dõi các sự kiện như client tham gia, client rời khỏi, tin nhắn được truyền hoặc lỗi xảy ra.
+- Giao diện client
+- Giao diện client là phần chính để người dùng sử dụng chương trình. Giao diện cần trực quan, rõ ràng và đầy đủ các thành phần cần thiết để thao tác nhanh chóng trong quá trình chat.
+- Mô tả từng thành phần trên form
+- Ô nhập IP: cho phép người dùng nhập địa chỉ IP của server mà client muốn kết nối đến. Thành phần này giúp xác định đúng máy chủ trong mạng.
+- Ô nhập port: dùng để nhập số cổng giao tiếp của server. Đây là thông số bắt buộc để thiết lập kết nối socket.
+- Ô nhập tên: cho phép người dùng nhập tên đăng nhập hoặc biệt danh trước khi tham gia phòng chat. Tên này sẽ được hiển thị kèm với tin nhắn khi gửi đi.
+- Khung chat: là khu vực hiển thị nội dung hội thoại. Tại đây, người dùng có thể theo dõi các tin nhắn gửi đi, nhận về, cũng như thông báo hệ thống như người dùng mới tham gia hay rời khỏi.
+- Ô nhập tin nhắn: nơi người dùng nhập nội dung muốn gửi. Sau khi nhập xong, người dùng có thể nhấn nút gửi hoặc phím Enter để gửi dữ liệu.
+- Nút Connect: dùng để kết nối client đến server sau khi người dùng đã nhập IP, port và tên.
+- Nút Send: dùng để gửi nội dung tin nhắn từ ô nhập đến server.
+- Nút Exit: dùng để thoát khỏi ứng dụng hoặc ngắt kết nối khỏi server.
+- Ngoài ra, hệ thống có thể bổ sung danh sách người dùng đang online để tăng tính trực quan và hỗ trợ quản lý người tham gia trong phòng chat.
+5. Thiết kế cơ sở dữ liệu hoặc lưu trữ
+- Trong phạm vi đề tài này, hệ thống chưa sử dụng cơ sở dữ liệu. Ứng dụng chỉ tập trung vào chức năng chat thời gian thực giữa các client thông qua server, do đó dữ liệu được xử lý trực tiếp trong bộ nhớ trong lúc chương trình đang hoạt động.
+- Các thông tin như tên người dùng, danh sách client kết nối và nội dung tin nhắn chỉ tồn tại tạm thời trong phiên làm việc. Khi người dùng thoát ứng dụng hoặc server dừng hoạt động, các dữ liệu này sẽ không được lưu lại.
+- Việc không sử dụng cơ sở dữ liệu giúp hệ thống đơn giản hơn, dễ triển khai và phù hợp với mục tiêu học tập của đề tài. Tuy nhiên, trong tương lai có thể mở rộng bằng cách bổ sung cơ sở dữ liệu để lưu trữ lịch sử chat, tài khoản người dùng hoặc trạng thái hoạt động của hệ thống.
+6. Thiết kế xử lý
+- Thuật toán khởi tạo server
+- Bước đầu tiên, server được khởi động và mở socket tại một port xác định. Sau đó, server chuyển sang trạng thái lắng nghe. Khi có client gửi yêu cầu kết nối, server chấp nhận kết nối đó, lưu thông tin client vào danh sách quản lý và tạo luồng riêng để xử lý dữ liệu từ client. Quá trình này lặp lại liên tục để server có thể phục vụ nhiều client cùng lúc.
+- Thuật toán kết nối client
+- Client khởi tạo giao diện, cho phép người dùng nhập IP, port và tên. Khi người dùng nhấn nút Connect, client tạo socket và gửi yêu cầu kết nối đến server. Nếu kết nối thành công, client nhận thông báo từ server và kích hoạt luồng nhận dữ liệu. Nếu thất bại, hệ thống hiển thị thông báo lỗi để người dùng kiểm tra lại thông tin cấu hình.
+- Thuật toán gửi nhận tin nhắn
+- Khi người dùng nhập nội dung và nhấn Send, client kiểm tra dữ liệu đầu vào. - Nếu hợp lệ, tin nhắn sẽ được đóng gói kèm tên người gửi rồi gửi đến server. Server nhận tin nhắn, xử lý nội dung và phát tán đến các client còn lại. Các client ở phía nhận sẽ nhận dữ liệu từ server thông qua luồng nhận, sau đó hiển thị nội dung lên khung chat.
+- Thuật toán ngắt kết nối
+- Khi người dùng chọn Exit hoặc đóng chương trình, client gửi thông báo ngắt kết nối đến server. Server nhận thông báo này, loại client ra khỏi danh sách quản lý và gửi thông báo cho các client còn lại biết người dùng đã rời khỏi hệ thống. Sau đó, socket phía client và server được đóng an toàn để giải phóng tài nguyên.
+CHƯƠNG 4. CÀI ĐẶT CHƯƠNG TRÌNH
+1. Môi trường phát triển
+- Trong quá trình xây dựng ứng dụng chat thuộc lĩnh vực Computer Networking, hệ thống được triển khai trên môi trường phát triển phù hợp nhằm đảm bảo hiệu quả và dễ dàng kiểm thử.
+- Ngôn ngữ lập trình sử dụng:
+Ứng dụng được phát triển bằng ngôn ngữ Java do khả năng hỗ trợ tốt cho lập trình mạng và xây dựng giao diện người dùng.
+- IDE sử dụng:
+Sử dụng NetBeans IDE hoặc Eclipse IDE để viết code, biên dịch và quản lý dự án.
+- Thư viện hỗ trợ GUI:
+Sử dụng thư viện Swing hoặc JavaFX để xây dựng giao diện người dùng đồ họa.
+- Hệ điều hành thử nghiệm:
+Ứng dụng được thử nghiệm trên Windows với môi trường mạng nội bộ (localhost).
+2. Các công nghệ sử dụng
+Hệ thống sử dụng các công nghệ chính sau:
+•	TCP Socket:
+Dùng để thiết lập kết nối và truyền dữ liệu giữa client và server một cách tin cậy. 
+•	Thread / Multithreading:
+Cho phép xử lý nhiều client đồng thời và tách riêng luồng gửi/nhận dữ liệu để tránh treo ứng dụng. 
+•	GUI Framework:
+Sử dụng Swing/JavaFX để tạo giao diện trực quan, hỗ trợ tương tác người dùng. 
+3. Cài đặt phía server
+- Phía server đóng vai trò trung tâm trong hệ thống, chịu trách nhiệm quản lý kết nối và truyền dữ liệu.
+- Khởi tạo socket server:
+Server tạo một ServerSocket để lắng nghe kết nối từ client.
+- Bind IP, port:
+Server gắn với một địa chỉ IP và port cụ thể để client có thể kết nối đến.
+- Lắng nghe kết nối:
+Server liên tục chờ yêu cầu kết nối từ các client.
+- Chấp nhận client:
+Khi có client kết nối, server sử dụng hàm accept() để thiết lập kết nối.
+- Tạo luồng xử lý cho từng client:
+Mỗi client sẽ được xử lý bởi một thread riêng để đảm bảo hoạt động song song.
+- Broadcast tin nhắn:
+Khi nhận tin nhắn từ một client, server sẽ gửi (broadcast) tin nhắn đó đến tất cả các client còn lại.
+4. Cài đặt phía client
+- Phía client là nơi người dùng tương tác trực tiếp với hệ thống.
+- Kết nối đến server:
+Client tạo socket và kết nối đến server thông qua IP và port.
+- Nhập tên người dùng:
+Người dùng nhập tên trước khi tham gia chat.
+- Gửi tin nhắn:
+Client lấy dữ liệu từ ô nhập và gửi đến server.
+- Nhận tin nhắn:
+Client sử dụng một luồng riêng để nhận dữ liệu từ server.
+- Hiển thị giao diện:
+Tin nhắn nhận được sẽ được hiển thị lên khung chat.
+5. Cài đặt giao diện GUI
+- Giao diện được thiết kế nhằm đảm bảo tính trực quan và dễ sử dụng.
+- Thiết kế cửa sổ chat:
+Bao gồm các thành phần chính như khung chat, ô nhập liệu và các nút chức năng.
+- Các nút chức năng:
+•	Connect: kết nối server 
+•	Send: gửi tin nhắn 
+•	Exit: thoát chương trình 
+-	Khu vực hiển thị tin nhắn:
+Hiển thị nội dung chat giữa các người dùng.
+-	Xử lý sự kiện:
+Khi người dùng nhấn nút Send hoặc Enter, chương trình sẽ lấy nội dung và gửi đi.
+6. Một số đoạn mã quan trọng
+- Mã tạo server socket
+ 
+Hình 1
+-	Mã kết nối client
+ 
+Hình 2
+-	Mã gửi tin nhắn
+ 
+Hình 3
+-	Mã nhận tin nhắn bằng luồng riêng
+ 
+Hình 4
+-	Mã cập nhật giao diện
+ 
+Hình 5
+CHƯƠNG 5. KIỂM THỬ VÀ ĐÁNH GIÁ
+1. Các trường hợp kiểm thử
+- Để đảm bảo hệ thống hoạt động đúng yêu cầu trong lĩnh vực Computer Networking, các trường hợp kiểm thử (test case) được xây dựng nhằm đánh giá đầy đủ chức năng và độ ổn định của ứng dụng.
+- Kết nối đúng IP và port:
+Client nhập đúng địa chỉ IP và port của server. Kết quả mong đợi là kết nối được thiết lập thành công, giao diện chuyển sang trạng thái sẵn sàng chat.
+- Kết nối sai IP hoặc port:
+Client nhập sai thông tin kết nối. Hệ thống cần hiển thị thông báo lỗi và không cho phép kết nối.
+- Gửi tin nhắn ngắn:
+Người dùng gửi các tin nhắn ngắn. Kết quả mong đợi là tin nhắn được gửi và hiển thị đầy đủ ở các client khác.
+- Gửi tin nhắn dài:
+Kiểm tra khả năng xử lý dữ liệu lớn. Tin nhắn dài phải được truyền đi đầy đủ, không bị cắt hoặc lỗi ký tự.
+- Nhiều client kết nối cùng lúc:
+Nhiều client cùng kết nối đến server. Hệ thống cần xử lý đồng thời mà không bị treo hoặc mất kết nối.
+- Client thoát đột ngột:
+Một client đóng chương trình mà không thông báo. Server cần phát hiện và loại bỏ client khỏi danh sách, đồng thời thông báo cho các client khác.
+- Server ngắt kết nối:
+Server dừng hoạt động. Các client cần nhận biết và xử lý tình huống (hiển thị lỗi hoặc ngắt kết nối an toàn).
+2. Kết quả kiểm thử
+* Bảng kết quả kiểm thử
+STT	Trường hợp kiểm thử	Kết quả mong đợi	Kết quả thực tế	Đánh giá
+1	Kết nối đúng IP/port	Kết nối thành công	Thành công	Đạt
+2	Kết nối sai IP/port	Báo lỗi	Báo lỗi đúng	Đạt
+3	Gửi tin nhắn ngắn	Hiển thị đúng	Hiển thị đúng	Đạt
+4	Gửi tin nhắn dài	Không mất dữ liệu	Hoạt động tốt	Đạt
+5	Nhiều client	Không treo	Ổn định	Đạt
+6	Client thoát đột ngột	Cập nhật trạng thái	Hoạt động tốt	Đạt
+7	Server ngắt	Client xử lý lỗi	Hiển thị lỗi	Đạt
+
+-	Mức độ đáp ứng yêu cầu
+-	Qua quá trình kiểm thử, hệ thống đã:
+•	Đáp ứng đầy đủ các yêu cầu chức năng đã đề ra 
+•	Hoạt động ổn định trong môi trường mạng cục bộ 
+•	Xử lý tốt các tình huống cơ bản và lỗi phổ biến 
+Tuy nhiên, hệ thống vẫn còn hạn chế ở một số tình huống nâng cao và môi trường thực tế.
+3. Đánh giá hệ thống
+- Ưu điểm
+- Giao diện trực quan:
+Ứng dụng sử dụng GUI thân thiện, dễ thao tác, phù hợp với người dùng.
+- Gửi nhận tin nhắn nhanh:
+Nhờ sử dụng TCP và đa luồng, hệ thống có khả năng truyền tin nhanh và ổn định.
+- Dễ sử dụng:
+Người dùng chỉ cần nhập IP, port và tên là có thể sử dụng ngay.
+- Ứng dụng đúng mô hình client-server:
+Hệ thống được thiết kế và triển khai đúng theo nguyên lý client-server, đảm bảo tính logic và dễ mở rộng.
+- Hạn chế
+- Chưa mã hóa dữ liệu:
+Dữ liệu truyền đi dưới dạng thuần (plain text), chưa đảm bảo tính bảo mật.
+- Chưa lưu lịch sử chat:
+Ứng dụng chưa sử dụng cơ sở dữ liệu để lưu trữ tin nhắn.
+- Chưa hỗ trợ gửi file/ảnh:
+Chỉ hỗ trợ gửi văn bản, chưa có chức năng nâng cao.
+- Chưa tối ưu cho mạng Internet thực tế:
+Ứng dụng chủ yếu hoạt động trong mạng LAN, chưa xử lý tốt các vấn đề như độ trễ, NAT hoặc bảo mật khi triển khai Internet.
+CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+1. Kết luận
+- Sau quá trình nghiên cứu và thực hiện đề tài trong lĩnh vực Computer Networking, nhóm đã hoàn thành việc xây dựng một ứng dụng chat có giao diện đồ họa (GUI) hoạt động theo mô hình client-server, sử dụng giao thức TCP với cơ chế xác nhận dữ liệu.
+- Về mặt thực hiện, đề tài đã triển khai đầy đủ các chức năng cơ bản như: kết nối giữa client và server, gửi và nhận tin nhắn, hiển thị nội dung hội thoại trên giao diện, xử lý nhiều client đồng thời bằng đa luồng, cũng như thông báo khi người dùng tham gia hoặc rời khỏi hệ thống. Bên cạnh đó, ứng dụng đã được kiểm thử với nhiều trường hợp khác nhau và cho kết quả hoạt động ổn định trong môi trường mạng cục bộ.
+- Xét về mức độ hoàn thành mục tiêu, đề tài đã đáp ứng tốt các yêu cầu ban đầu đã đề ra. Hệ thống hoạt động đúng theo nguyên lý của mô hình client-server, đảm bảo truyền dữ liệu chính xác nhờ sử dụng giao thức TCP, đồng thời cung cấp giao diện thân thiện giúp người dùng dễ dàng thao tác.
+- Thông qua quá trình thực hiện, nhóm đã tích lũy được nhiều kiến thức và kỹ năng quan trọng. Trước hết là hiểu rõ cách sử dụng TCP Socket để thiết lập và quản lý kết nối mạng. Tiếp theo là kỹ năng xây dựng giao diện GUI, giúp tạo ra ứng dụng trực quan và dễ sử dụng. Ngoài ra, việc áp dụng đa luồng (multithreading) đã giúp nâng cao hiệu năng và tránh tình trạng treo chương trình khi xử lý nhiều tác vụ cùng lúc. Cuối cùng, nhóm cũng nắm được cách thiết kế và xây dựng một ứng dụng mạng hoàn chỉnh, từ phân tích yêu cầu đến cài đặt và kiểm thử.
+- Tóm lại, đề tài không chỉ giúp củng cố kiến thức lý thuyết mà còn nâng cao khả năng thực hành, tư duy lập trình và kỹ năng phát triển phần mềm trong thực tế.
+2. Hướng phát triển
+- Mặc dù ứng dụng đã đáp ứng các chức năng cơ bản, vẫn còn nhiều hướng phát triển để nâng cao chất lượng và mở rộng tính năng của hệ thống trong tương lai.
+- Trước hết, có thể bổ sung chức năng chat nhóm, cho phép nhiều người dùng tham gia vào cùng một phòng chat thay vì chỉ trao đổi đơn giản. Điều này sẽ giúp ứng dụng trở nên linh hoạt và phù hợp hơn với nhu cầu thực tế.
+- Tiếp theo, hệ thống có thể phát triển tính năng gửi file và hình ảnh, giúp người dùng chia sẻ dữ liệu đa dạng hơn thay vì chỉ giới hạn ở văn bản. Đây là một chức năng phổ biến trong các ứng dụng chat hiện đại.
+- Ngoài ra, cần bổ sung cơ chế lưu lịch sử tin nhắn bằng cách tích hợp cơ sở dữ liệu. Điều này giúp người dùng có thể xem lại nội dung hội thoại sau khi đăng nhập lại hệ thống.
+- Một hướng phát triển quan trọng khác là xây dựng chức năng đăng nhập tài khoản, giúp quản lý người dùng tốt hơn và tăng tính bảo mật cho hệ thống.
+- Bên cạnh đó, việc mã hóa dữ liệu khi truyền qua mạng là rất cần thiết để đảm bảo an toàn thông tin, đặc biệt khi ứng dụng được triển khai trên môi trường Internet.
+- Ngoài ra, hệ thống có thể được nâng cấp để hỗ trợ kết nối qua Internet thay vì chỉ hoạt động trong mạng LAN. Điều này đòi hỏi xử lý thêm các vấn đề như NAT, firewall và độ trễ mạng.
+- Cuối cùng, giao diện người dùng có thể được cải tiến đẹp hơn và hiện đại hơn, nâng cao trải nghiệm người dùng thông qua việc sử dụng các framework GUI tiên tiến hoặc thiết kế UI/UX chuyên nghiệp.
