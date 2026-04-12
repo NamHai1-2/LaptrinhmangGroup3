@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using _1_SharedLibrary.Models;
 using _1_SharedLibrary.Utils;
@@ -14,82 +12,73 @@ namespace _2_ChatServer.Network
     public class TcpServerHandler
     {
         private TcpListener _server;
-
-        private Dictionary<string, TcpClient> _onlineUsers = new Dictionary<string, TcpClient>();
-
+        private Dictionary<string, ClientConnection> _onlineUsers = new Dictionary<string, ClientConnection>();
         private DatabaseHelper _db = new DatabaseHelper();
-
         public Action<string> OnLogEvent;
 
-        public void StartServer()
+        public async Task StartServerAsync()
         {
             try
             {
-                _db.InitializeDatabase();
+                _db.Initialize();
                 _server = new TcpListener(IPAddress.Any, Constants.SERVER_PORT);
                 _server.Start();
-                OnLogEvent?.Invoke($"[HỆ THỐNG] Server đã khởi động tại Port {Constants.SERVER_PORT}...");
+                OnLogEvent?.Invoke($"[HỆ THỐNG] Server khởi động tại Port {Constants.SERVER_PORT}");
 
-                Task.Run(() => AcceptClients());
+                while (true)
+                {
+                    TcpClient tcpClient = await _server.AcceptTcpClientAsync();
+                    ClientConnection client = new ClientConnection(tcpClient);
+                    OnLogEvent?.Invoke($"[MẠNG] Thiết bị kết nối: {client.ClientEndPoint}");
+
+                    _ = Task.Run(() => HandleClientAsync(client));
+                }
             }
             catch (Exception ex)
             {
-                OnLogEvent?.Invoke($"[LỖI HỆ THỐNG] Không thể khởi động Server: {ex.Message}");
+                if (!ex.Message.Contains("aborted") && !ex.Message.Contains("WSACancelBlockingCall"))
+                {
+                    OnLogEvent?.Invoke($"[LỖI SERVER] {ex.Message}");
+                }
             }
         }
 
-        private void AcceptClients()
+        private async Task HandleClientAsync(ClientConnection client)
         {
-            while (true)
-            {
-                TcpClient client = _server.AcceptTcpClient();
-                client.NoDelay = true;
-                client.ReceiveBufferSize = Constants.BUFFER_SIZE;
-                client.SendBufferSize = Constants.BUFFER_SIZE;
-
-                OnLogEvent?.Invoke("[MẠNG] Có một thiết bị ẩn danh vừa kết nối.");
-
-                Task.Run(() => HandleClient(client));
-            }
-        }
-
-        private void HandleClient(TcpClient client)
-        {
-            NetworkStream stream = client.GetStream();
-            byte[] buffer = new byte[Constants.BUFFER_SIZE];
-            string currentUsername = string.Empty; 
-
             try
             {
-                while (true)
+                while (client.IsConnected)
                 {
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    if (bytesRead == 0) break; 
-
-                    string json = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    var packet = JsonSerializer.Deserialize<MessagePacket>(json);
-
+                    MessagePacket packet = client.ReceiveMessage();
+                    if (packet == null) break;
 
                     if (packet.Command == CommandType.Login)
                     {
-                        bool isOk = _db.CheckLogin(packet.Sender, packet.Content); 
-                        if (isOk)
+                        if (_db.CheckLogin(packet.Sender, packet.Content))
                         {
-                            currentUsername = packet.Sender;
+                            client.Username = packet.Sender;
+                            lock (_onlineUsers) { _onlineUsers[client.Username] = client; }
 
-                            if (_onlineUsers.ContainsKey(currentUsername))
-                                _onlineUsers[currentUsername] = client;
-                            else
-                                _onlineUsers.Add(currentUsername, client);
-
-                            SendToClient(client, new MessagePacket { Command = CommandType.LoginSuccess });
-                            OnLogEvent?.Invoke($"[ĐĂNG NHẬP] User '{currentUsername}' đã tham gia hệ thống.");
-
+                            client.SendMessage(new MessagePacket { Command = CommandType.LoginSuccess });
+                            OnLogEvent?.Invoke($"[ĐĂNG NHẬP] {client.Username} đã vào phòng.");
                             BroadcastUserList();
                         }
                         else
                         {
-                            SendToClient(client, new MessagePacket { Command = CommandType.LoginFail });
+                            client.SendMessage(new MessagePacket { Command = CommandType.LoginFail });
+                        }
+                    }
+                    else if (packet.Command == CommandType.Register)
+                    {
+                        if (_db.RegisterUser(packet.Sender, packet.Content))
+                        {
+                            client.SendMessage(new MessagePacket { Command = CommandType.RegisterSuccess });
+                            OnLogEvent?.Invoke($"[ĐĂNG KÝ] Tài khoản mới: {packet.Sender}");
+                        }
+                        else
+                        {
+                            client.SendMessage(new MessagePacket { Command = CommandType.RegisterFail });
+                            OnLogEvent?.Invoke($"[ĐĂNG KÝ LỖI] Trùng tên tài khoản: {packet.Sender}");
                         }
                     }
                     else if (packet.Command == CommandType.BroadcastMessage)
@@ -99,65 +88,75 @@ namespace _2_ChatServer.Network
                     }
                     else if (packet.Command == CommandType.PrivateMessage)
                     {
+                        packet.Sender = client.Username; // Khóa cứng tên để bảo mật
                         OnLogEvent?.Invoke($"[CHAT RIÊNG] {packet.Sender} -> {packet.Receiver}: {packet.Content}");
                         SendPrivate(packet.Receiver, packet);
                     }
+                    else if (packet.Command == CommandType.Disconnect)
+                    {
+                        break;
+                    }
                 }
             }
-            catch
-            {
-            }
+            catch { }
             finally
             {
-                if (!string.IsNullOrEmpty(currentUsername) && _onlineUsers.ContainsKey(currentUsername))
+                if (!string.IsNullOrEmpty(client.Username))
                 {
-                    _onlineUsers.Remove(currentUsername);
-                    OnLogEvent?.Invoke($"[THOÁT] User '{currentUsername}' đã rời khỏi hệ thống.");
-                    BroadcastUserList(); 
+                    lock (_onlineUsers) { _onlineUsers.Remove(client.Username); }
+                    OnLogEvent?.Invoke($"[THOÁT] {client.Username} đã rời phòng.");
+                    BroadcastUserList();
                 }
                 client.Close();
             }
         }
 
-
-        private void SendToClient(TcpClient client, MessagePacket packet)
-        {
-            try
-            {
-                string json = JsonSerializer.Serialize(packet);
-                byte[] data = Encoding.UTF8.GetBytes(json);
-                client.GetStream().Write(data, 0, data.Length);
-            }
-            catch {  }
-        }
-
-        private void SendPrivate(string receiver, MessagePacket packet)
-        {
-            if (_onlineUsers.ContainsKey(receiver))
-            {
-                SendToClient(_onlineUsers[receiver], packet);
-            }
-        }
-
         private void Broadcast(MessagePacket packet)
         {
-            
-            foreach (var user in _onlineUsers)
+            lock (_onlineUsers)
             {
-                SendToClient(user.Value, packet);
+                foreach (var user in _onlineUsers.Values)
+                {
+                    user.SendMessage(packet);
+                }
             }
         }
 
         private void BroadcastUserList()
         {
-            string usersString = string.Join(",", _onlineUsers.Keys);
-
-            var packet = new MessagePacket
+            lock (_onlineUsers)
             {
-                Command = CommandType.UserListUpdate,
-                Content = usersString
-            };
-            Broadcast(packet);
+                string usersString = string.Join(",", _onlineUsers.Keys);
+                Broadcast(new MessagePacket { Command = CommandType.UserListUpdate, Content = usersString });
+            }
+        }
+        private void SendPrivate(string receiver, MessagePacket packet)
+        {
+            lock (_onlineUsers)
+            {
+                if (_onlineUsers.ContainsKey(receiver))
+                {
+                    _onlineUsers[receiver].SendMessage(packet);
+                }
+            }
+        }    
+        public void StopServer()
+        {
+            try
+            {
+                
+                _server?.Stop();
+
+                lock (_onlineUsers)
+                {
+                    foreach (var client in _onlineUsers.Values)
+                    {
+                        client.Close();
+                    }
+                    _onlineUsers.Clear();
+                }
+            }
+            catch { }
         }
     }
 }

@@ -1,171 +1,312 @@
-using System;
-using System.Windows.Forms;
 using _1_SharedLibrary.Models;
-using _1_SharedLibrary.Utils;
 using _3_ChatClient.Network;
+using _3_ChatClient.UI.CustomControls;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace _3_ChatClient.UI
 {
     public partial class MainChatForm : Form
     {
         private readonly TcpClientHelper _clientHelper;
-        private readonly string _currentUsername;
 
-        public MainChatForm(TcpClientHelper clientHelper, string username)
+        private ListBox _usersListBox;
+        private FlowLayoutPanel _pnlChatBoard;
+        private TextBox _messageTextBox;
+        private Button _sendButton;
+        private Label _statusLabel;
+        private Label _chatModeLabel;
+        private ContextMenuStrip _userContextMenu;
+        private string _privateReceiver = ""; 
+
+        public MainChatForm(TcpClientHelper clientHelper)
         {
-            InitializeComponent();
-
             _clientHelper = clientHelper;
-            _currentUsername = username;
-
-            _clientHelper.OnMessageReceived += ClientHelper_OnMessageReceived;
-            _clientHelper.OnError += ClientHelper_OnError;
-            _clientHelper.OnStatusChanged += ClientHelper_OnStatusChanged;
+            InitializeComponent();
+            SetupEventHandlers();
         }
 
-        private void MainChatForm_Load(object sender, EventArgs e)
+        private void InitializeComponent()
         {
-            lblCurrentUser.Text = "Người dùng: " + _currentUsername;
-            lblStatus.Text = _clientHelper.IsConnected ? "Đã kết nối" : "Mất kết nối";
+            this.SuspendLayout();
 
-            txtMessage.Focus();
-        }
+            this.Text = "Chat Application - Main";
+            this.Size = new Size(950, 650);
+            this.StartPosition = FormStartPosition.CenterScreen;
 
-        private async void btnSend_Click(object sender, EventArgs e)
-        {
-            string content = txtMessage.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(content))
+            var topBar = new Panel
             {
-                txtMessage.Focus();
-                return;
-            }
-
-            MessagePacket packet = new MessagePacket
-            {
-                Sender = _currentUsername,
-                Receiver = "ALL",
-                Content = content,
-                Timestamp = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy"),
-                MessageType = Constants.MESSAGE_TYPE_CHAT
+                Dock = DockStyle.Top,
+                Height = 45,
+                BackColor = Color.FromArgb(41, 128, 185)
             };
 
-            bool sent = await _clientHelper.SendMessageAsync(packet);
-
-            if (sent)
+            var lblTitle = new Label
             {
-                txtMessage.Clear();
-                txtMessage.Focus();
-            }
+                Text = "💬 Nhóm Chat ",
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Location = new Point(15, 10),
+                AutoSize = true
+            };
+
+            var btnLogout = new Button
+            {
+                Text = "Đăng xuất",
+                Dock = DockStyle.Right,
+                Width = 100,
+                BackColor = Color.FromArgb(231, 76, 60),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.Click += (s, e) => {
+                _clientHelper.Disconnect();
+                Application.Restart(); 
+            };
+
+            topBar.Controls.Add(lblTitle);
+            topBar.Controls.Add(btnLogout);
+            this.Controls.Add(topBar);
+
+            var mainSplitContainer = new SplitContainer
+            {
+                Dock = DockStyle.Fill,
+                SplitterDistance = 240,
+                FixedPanel = FixedPanel.Panel1
+            };
+            this.Controls.Add(mainSplitContainer);
+            mainSplitContainer.BringToFront(); 
+
+            var lblOnline = new Label
+            {
+                Text = "Online Users",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Dock = DockStyle.Top,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Height = 50
+            };
+
+            _statusLabel = new Label
+            {
+                Text = $"👤 : {_clientHelper.CurrentUsername}",
+                Dock = DockStyle.Bottom,
+                Height = 45,
+                Padding = new Padding(15, 0, 10, 0),
+                TextAlign = ContentAlignment.MiddleLeft,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                BackColor = Color.FromArgb(236, 240, 241)
+            };
+
+            _usersListBox = new ListBox
+            {
+                Font = new Font("Segoe UI", 10),
+                Dock = DockStyle.Fill,
+                BorderStyle = BorderStyle.None
+            };
+
+            // Menu chuột phải để Chat Riêng
+            _userContextMenu = new ContextMenuStrip();
+            var menuPrivate = new ToolStripMenuItem("Chat Riêng (Private)");
+            menuPrivate.Click += (s, e) => StartPrivateChat();
+            var menuGlobal = new ToolStripMenuItem("Quay lại Chat Tổng");
+            menuGlobal.Click += (s, e) => EndPrivateChat();
+            _userContextMenu.Items.AddRange(new ToolStripItem[] { menuPrivate, menuGlobal });
+            _usersListBox.ContextMenuStrip = _userContextMenu;
+
+            mainSplitContainer.Panel1.Controls.Add(_usersListBox);
+            mainSplitContainer.Panel1.Controls.Add(lblOnline);
+            mainSplitContainer.Panel1.Controls.Add(_statusLabel);
+
+
+            _chatModeLabel = new Label
+            {
+                Text = "🌍 Chế độ: Chat Tổng (Gửi cho tất cả)",
+                Dock = DockStyle.Top,
+                Height = 35,
+                BackColor = Color.FromArgb(245, 245, 245),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = Color.DarkGreen
+            };
+
+            var bottomInputPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 55,
+                Padding = new Padding(10, 5, 10, 10)
+            };
+
+            _sendButton = new Button
+            {
+                Text = "Send",
+                Width = 100,
+                Dock = DockStyle.Right,
+                BackColor = Color.FromArgb(52, 152, 219),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+            };
+
+            _messageTextBox = new TextBox
+            {
+                Font = new Font("Segoe UI", 11),
+                Dock = DockStyle.Fill
+            };
+
+            bottomInputPanel.Controls.Add(_messageTextBox);
+            bottomInputPanel.Controls.Add(_sendButton);
+
+            _pnlChatBoard = new FlowLayoutPanel
+            {
+                BackColor = Color.White,
+                AutoScroll = true,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+                Dock = DockStyle.Fill,
+                Padding = new Padding(20, 30, 20, 20)
+            };
+
+            mainSplitContainer.Panel2.Controls.Add(_pnlChatBoard);
+            mainSplitContainer.Panel2.Controls.Add(bottomInputPanel);
+            mainSplitContainer.Panel2.Controls.Add(_chatModeLabel);
+
+            this.ResumeLayout(false);
         }
 
-        private async void btnLogout_Click(object sender, EventArgs e)
+        private void SetupEventHandlers()
         {
-            await SendLogoutPacketAsync();
-            Close();
-        }
-
-        private async Task SendLogoutPacketAsync()
-        {
-            try
-            {
-                if (_clientHelper != null && _clientHelper.IsConnected)
+            _clientHelper.OnMessageReceived += OnServerMessageReceived;
+            _sendButton.Click += (sender, e) => SendMessage();
+            _messageTextBox.KeyDown += (sender, e) => {
+                if (e.KeyCode == Keys.Enter && !e.Shift)
                 {
-                    MessagePacket logoutPacket = new MessagePacket
-                    {
-                        Sender = _currentUsername,
-                        Receiver = "SERVER",
-                        Content = $"{_currentUsername} đã đăng xuất",
-                        Timestamp = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy"),
-                        MessageType = Constants.MESSAGE_TYPE_LOGOUT
-                    };
-
-                    await _clientHelper.SendMessageAsync(logoutPacket);
+                    e.SuppressKeyPress = true;
+                    SendMessage();
                 }
-            }
-            catch
+            };
+
+            _usersListBox.MouseDown += (s, e) => {
+                if (e.Button == MouseButtons.Right)
+                {
+                    int index = _usersListBox.IndexFromPoint(e.Location);
+                    if (index != -1) _usersListBox.SelectedIndex = index;
+                }
+            };
+        }
+
+        private void StartPrivateChat()
+        {
+            if (_usersListBox.SelectedIndex != -1)
             {
+                string selected = _usersListBox.SelectedItem.ToString().Replace(" (Online)", "");
+                if (selected == _clientHelper.CurrentUsername) return;
+
+                _privateReceiver = selected;
+                _chatModeLabel.Text = $"🔒 Đang CHAT RIÊNG với: {_privateReceiver}";
+                _chatModeLabel.ForeColor = Color.DarkRed;
+                _chatModeLabel.BackColor = Color.MistyRose;
             }
         }
 
-        private void ClientHelper_OnMessageReceived(MessagePacket packet)
+        private void EndPrivateChat()
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => ClientHelper_OnMessageReceived(packet)));
-                return;
-            }
-
-            if (packet == null)
-                return;
-
-            if (packet.MessageType == Constants.MESSAGE_TYPE_CHAT)
-            {
-                lstMessages.Items.Add($"[{packet.Timestamp}] {packet.Sender}: {packet.Content}");
-            }
-            else if (packet.MessageType == Constants.MESSAGE_TYPE_SYSTEM)
-            {
-                lstMessages.Items.Add($"[HỆ THỐNG] {packet.Content}");
-            }
-            else if (packet.MessageType == Constants.MESSAGE_TYPE_LOGIN)
-            {
-                lstMessages.Items.Add($"[ĐĂNG NHẬP] {packet.Sender} đã vào chat");
-            }
-            else if (packet.MessageType == Constants.MESSAGE_TYPE_LOGOUT)
-            {
-                lstMessages.Items.Add($"[ĐĂNG XUẤT] {packet.Sender} đã rời chat");
-            }
-
-            lstMessages.TopIndex = lstMessages.Items.Count - 1;
+            _privateReceiver = "";
+            _usersListBox.ClearSelected();
+            _chatModeLabel.Text = "🌍 Chế độ: Chat Tổng (Gửi cho tất cả)";
+            _chatModeLabel.ForeColor = Color.DarkGreen;
+            _chatModeLabel.BackColor = Color.FromArgb(245, 245, 245);
         }
 
-        private void ClientHelper_OnError(string errorMessage)
+        private async void SendMessage()
         {
-            if (InvokeRequired)
+            var message = _messageTextBox.Text.Trim();
+            if (string.IsNullOrEmpty(message)) return;
+
+            MessagePacket packet;
+            if (string.IsNullOrEmpty(_privateReceiver))
             {
-                Invoke(new Action(() => ClientHelper_OnError(errorMessage)));
-                return;
+                packet = new MessagePacket
+                {
+                    Command = CommandType.BroadcastMessage,
+                    Content = message,
+                    Sender = _clientHelper.CurrentUsername
+                };
+                AddMessageToDisplay("You: " + message, DateTime.Now.ToString("HH:mm"), true);
+            }
+            else
+            {
+                packet = new MessagePacket
+                {
+                    Command = CommandType.PrivateMessage,
+                    Content = message,
+                    Sender = _clientHelper.CurrentUsername,
+                    Receiver = _privateReceiver
+                };
+                AddMessageToDisplay($"Bạn -> {_privateReceiver}: {message}", DateTime.Now.ToString("HH:mm"), true);
             }
 
-            lblStatus.Text = "Có lỗi";
-            MessageBox.Show(errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await _clientHelper.SendMessageAsync(packet);
+            _messageTextBox.Clear();
         }
 
-        private void ClientHelper_OnStatusChanged(string status)
+        private void OnServerMessageReceived(MessagePacket packet)
         {
-            if (InvokeRequired)
+            if (this.IsDisposed) return;
+            this.Invoke(new Action(() => {
+                if (packet.Command == CommandType.BroadcastMessage && packet.Sender != _clientHelper.CurrentUsername)
+                {
+                    AddMessageToDisplay(packet.Sender + ": " + packet.Content, packet.Timestamp.ToString("HH:mm"), false);
+                }
+                else if (packet.Command == CommandType.PrivateMessage)
+                {
+                    AddMessageToDisplay($"[Chat riêng] {packet.Sender}: {packet.Content}", packet.Timestamp.ToString("HH:mm"), false);
+                }
+                else if (packet.Command == CommandType.UserListUpdate)
+                {
+                    UpdateUsersList(packet.Content);
+                }
+            }));
+        }
+
+        private void AddMessageToDisplay(string message, string time, bool isMe)
+        {
+            ChatBubble bubble = new ChatBubble();
+            bubble.AutoSize = true;
+            bubble.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            bubble.MinimumSize = new Size(100, 40);
+            bubble.MaximumSize = new Size(_pnlChatBoard.Width - 60, 0);
+
+            bubble.SetMessage(message, time, isMe);
+            _pnlChatBoard.Controls.Add(bubble);
+            _pnlChatBoard.ScrollControlIntoView(bubble);
+        }
+
+        private void UpdateUsersList(string userString)
+        {
+            _usersListBox.Items.Clear();
+            if (string.IsNullOrEmpty(userString)) return;
+            string[] users = userString.Split(',');
+            foreach (var u in users)
             {
-                Invoke(new Action(() => ClientHelper_OnStatusChanged(status)));
-                return;
+                _usersListBox.Items.Add(u + " (Online)");
             }
-
-            lblStatus.Text = status;
         }
 
-        private async void MainChatForm_FormClosing(object sender, FormClosingEventArgs e)
+        protected override async void OnFormClosing(FormClosingEventArgs e)
         {
-            _clientHelper.OnMessageReceived -= ClientHelper_OnMessageReceived;
-            _clientHelper.OnError -= ClientHelper_OnError;
-            _clientHelper.OnStatusChanged -= ClientHelper_OnStatusChanged;
-
-            await SendLogoutPacketAsync();
-
             try
             {
-                _clientHelper?.Disconnect();
+                await _clientHelper.SendMessageAsync(new MessagePacket { Command = CommandType.Disconnect });
+                _clientHelper.Disconnect();
             }
-            catch
-            {
-            }
-        }
-
-        private void txtMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                btnSend.PerformClick();
-                e.SuppressKeyPress = true;
-            }
+            catch { }
+            base.OnFormClosing(e);
+            Environment.Exit(0);
         }
     }
 }

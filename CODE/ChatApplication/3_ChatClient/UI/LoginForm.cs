@@ -1,178 +1,143 @@
-using System;
-using System.Windows.Forms;
 using _1_SharedLibrary.Models;
-using _1_SharedLibrary.Utils;
 using _3_ChatClient.Network;
+using System;
+using System.Drawing;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace _3_ChatClient.UI
 {
     public partial class LoginForm : Form
     {
-        private TcpClientHelper _clientHelper;
+        private readonly TcpClientHelper _clientHelper;
+        private TextBox _usernameTextBox, _passwordTextBox, _ipTextBox, _portTextBox;
+        private Label _statusLabel;
+        private Button _loginButton, _toggleModeButton;
+        private bool _isRegistrationMode = false;
 
         public LoginForm()
         {
-            InitializeComponent();
-
             _clientHelper = new TcpClientHelper();
-
-            _clientHelper.OnStatusChanged += ClientHelper_OnStatusChanged;
-            _clientHelper.OnError += ClientHelper_OnError;
-            _clientHelper.OnMessageReceived += ClientHelper_OnMessageReceived;
+            _clientHelper.OnMessageReceived += OnServerMessageReceived;
+            InitializeComponent();
         }
 
-        private void LoginForm_Load(object sender, EventArgs e)
+        private void InitializeComponent()
         {
-            txtServerIp.Text = Constants.DEFAULT_SERVER_IP;
-            txtPort.Text = Constants.DEFAULT_SERVER_PORT.ToString();
-            lblStatus.Text = "Chưa kết nối";
+            this.SuspendLayout();
+            this.Text = "Chat Application - Login";
+            this.Size = new Size(400, 550);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = Color.FromArgb(240, 240, 240);
 
-            txtUsername.Focus();
+            // Các nhãn và ô nhập
+            AddLabel("IP Server:", 100);
+            _ipTextBox = new TextBox { Text = "127.0.0.1", Location = new Point(120, 97), Size = new Size(230, 25) };
+
+            AddLabel("Port:", 140);
+            _portTextBox = new TextBox { Text = "8080", Location = new Point(120, 137), Size = new Size(230, 25) };
+
+            AddLabel("Username:", 180);
+            _usernameTextBox = new TextBox { Location = new Point(120, 177), Size = new Size(230, 25) };
+
+            AddLabel("Password:", 220);
+            _passwordTextBox = new TextBox { Location = new Point(120, 217), Size = new Size(230, 25), UseSystemPasswordChar = true };
+
+            _loginButton = new Button { Text = "LOGIN", Location = new Point(50, 300), Size = new Size(300, 45), BackColor = Color.FromArgb(52, 152, 219), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 12, FontStyle.Bold) };
+            _toggleModeButton = new Button { Text = "New to Chat? Register", Location = new Point(50, 360), Size = new Size(300, 30), FlatStyle = FlatStyle.Flat, ForeColor = Color.DimGray };
+            _statusLabel = new Label { Text = "Ready", Location = new Point(50, 410), Size = new Size(300, 20), TextAlign = ContentAlignment.MiddleCenter };
+
+            _loginButton.Click += async (s, e) => await HandleSubmitAsync();
+            _toggleModeButton.Click += (s, e) => ToggleMode();
+
+            this.Controls.AddRange(new Control[] { _ipTextBox, _portTextBox, _usernameTextBox, _passwordTextBox, _loginButton, _toggleModeButton, _statusLabel });
+            this.ResumeLayout(false);
         }
 
-        private async void btnLogin_Click(object sender, EventArgs e)
+        private void AddLabel(string text, int y) => this.Controls.Add(new Label { Text = text, Location = new Point(30, y), AutoSize = true });
+
+        private void ToggleMode()
         {
-            string username = txtUsername.Text.Trim();
-            string serverIp = txtServerIp.Text.Trim();
-            string portText = txtPort.Text.Trim();
+            _isRegistrationMode = !_isRegistrationMode;
+            _loginButton.Text = _isRegistrationMode ? "REGISTER" : "LOGIN";
+            _loginButton.BackColor = _isRegistrationMode ? Color.FromArgb(46, 204, 113) : Color.FromArgb(52, 152, 219);
+            _toggleModeButton.Text = _isRegistrationMode ? "Already have account? Login" : "New to Chat? Register";
+        }
 
-            if (string.IsNullOrWhiteSpace(username))
+        private async Task HandleSubmitAsync()
+        {
+            string username = _usernameTextBox.Text.Trim();
+            string password = _passwordTextBox.Text.Trim();
+
+            
+            if (username.Length < 1)
             {
-                MessageBox.Show("Vui lòng nhập tên đăng nhập.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtUsername.Focus();
+                MessageBox.Show("Tên tài khoản không được để trống!","lỗi nhập liệu ");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(serverIp))
+            
+            if (string.IsNullOrEmpty(password) || password.Length < 1)
             {
-                MessageBox.Show("Vui lòng nhập địa chỉ IP server.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtServerIp.Focus();
+                MessageBox.Show("Mật khẩu không được để trống!","lỗi bảo mật");
                 return;
             }
-
-            if (!int.TryParse(portText, out int port))
+            if (string.IsNullOrWhiteSpace(_ipTextBox.Text) || !int.TryParse(_portTextBox.Text, out int port))
             {
-                MessageBox.Show("Port không hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtPort.Focus();
-                return;
+                MessageBox.Show("IP hoặc Port không hợp lệ!"); return;
             }
 
-            ToggleControls(false);
-            lblStatus.Text = "Đang kết nối đến server...";
+            _clientHelper.CurrentUsername = _usernameTextBox.Text.Trim();
+            bool isConnected = await _clientHelper.ConnectAsync(_ipTextBox.Text, port);
+            if (!isConnected) return;
 
-            bool connected = await _clientHelper.ConnectAsync(serverIp, port);
-
-            if (!connected)
+            var packet = new MessagePacket
             {
-                ToggleControls(true);
-                return;
-            }
-
-            MessagePacket loginPacket = new MessagePacket
-            {
-                Sender = username,
-                Receiver = "SERVER",
-                Content = $"{username} đăng nhập vào hệ thống",
-                Timestamp = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy"),
-                MessageType = Constants.MESSAGE_TYPE_LOGIN
+                Command = _isRegistrationMode ? CommandType.Register : CommandType.Login,
+                Sender = _usernameTextBox.Text,
+                Content = _passwordTextBox.Text
             };
-
-            bool sent = await _clientHelper.SendMessageAsync(loginPacket);
-
-            if (!sent)
-            {
-                ToggleControls(true);
-                return;
-            }
-
-            MainChatForm mainChatForm = new MainChatForm(_clientHelper, username);
-            mainChatForm.FormClosed += MainChatForm_FormClosed;
-            mainChatForm.Show();
-
-            this.Hide();
+            await _clientHelper.SendMessageAsync(packet);
         }
 
-        private void MainChatForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void OnServerMessageReceived(MessagePacket packet)
         {
-            try
+            if (this.IsDisposed) return;
+
+            this.Invoke(new Action(() =>
             {
-                if (_clientHelper != null && _clientHelper.IsConnected)
+                if (packet.Command == CommandType.LoginSuccess)
                 {
-                    _clientHelper.Disconnect();
+                    _statusLabel.Text = "Success!";
+                    OpenMainChatForm();
                 }
-            }
-            catch
-            {
-            }
-
-            this.Show();
-            ToggleControls(true);
-            lblStatus.Text = "Chưa kết nối";
+                else if (packet.Command == CommandType.LoginFail)
+                {
+                    _statusLabel.Text = "Login Failed!";
+                    MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (packet.Command == CommandType.RegisterSuccess)
+                {
+                    
+                    MessageBox.Show("Đăng ký thành công! Bạn có thể đăng nhập ngay.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ToggleMode(); 
+                }
+                
+                else if (packet.Command == CommandType.RegisterFail)
+                {
+                    
+                    _statusLabel.Text = "Registration Failed!";
+                    MessageBox.Show("Tên tài khoản này đã có người sử dụng. Vui lòng chọn tên khác!", "Lỗi Đăng Ký", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }));
         }
-
-        private void ClientHelper_OnStatusChanged(string status)
+        private void OpenMainChatForm()
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => ClientHelper_OnStatusChanged(status)));
-                return;
-            }
+            MainChatForm mainChatForm = new MainChatForm(_clientHelper);
 
-            lblStatus.Text = status;
-        }
-
-        private void ClientHelper_OnError(string errorMessage)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => ClientHelper_OnError(errorMessage)));
-                return;
-            }
-
-            lblStatus.Text = "Có lỗi xảy ra";
-            MessageBox.Show(errorMessage, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            ToggleControls(true);
-        }
-
-        private void ClientHelper_OnMessageReceived(MessagePacket packet)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => ClientHelper_OnMessageReceived(packet)));
-                return;
-            }
-
-            if (packet == null)
-                return;
-
-            if (packet.MessageType == Constants.MESSAGE_TYPE_SYSTEM)
-            {
-                lblStatus.Text = packet.Content;
-            }
-        }
-
-        private void ToggleControls(bool enabled)
-        {
-            txtUsername.Enabled = enabled;
-            txtServerIp.Enabled = enabled;
-            txtPort.Enabled = enabled;
-            btnLogin.Enabled = enabled;
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void LoginForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                _clientHelper?.Disconnect();
-            }
-            catch
-            {
-            }
+            mainChatForm.FormClosed += (sender, e) => this.Close();
+            mainChatForm.Show();
+            this.Hide();
         }
     }
 }

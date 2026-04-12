@@ -18,107 +18,44 @@ namespace _2_ChatServer.Network
 
         public bool IsConnected
         {
-            get
-            {
-                try
-                {
-                    return _tcpClient != null && _tcpClient.Connected;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
+            get { try { return _tcpClient != null && _tcpClient.Connected; } catch { return false; } }
         }
-
-        public TcpClient TcpClient => _tcpClient;
 
         public ClientConnection(TcpClient tcpClient)
         {
-            _tcpClient = tcpClient ?? throw new ArgumentNullException(nameof(tcpClient));
+            _tcpClient = tcpClient;
             _networkStream = _tcpClient.GetStream();
             _reader = new StreamReader(_networkStream);
-            _writer = new StreamWriter(_networkStream)
-            {
-                AutoFlush = true
-            };
-
+            _writer = new StreamWriter(_networkStream) { AutoFlush = true };
             ClientEndPoint = _tcpClient.Client.RemoteEndPoint?.ToString();
-            Username = string.Empty;
-        }
-
-        public string ReceiveRaw()
-        {
-            try
-            {
-                return _reader.ReadLine();
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         public MessagePacket ReceiveMessage()
         {
             try
             {
-                string rawData = ReceiveRaw();
-
-                if (string.IsNullOrWhiteSpace(rawData))
-                    return null;
-
+                string rawData = _reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(rawData)) return null;
                 return JsonParser.Deserialize<MessagePacket>(rawData);
             }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public bool SendRaw(string rawData)
-        {
-            try
-            {
-                if (!IsConnected || string.IsNullOrWhiteSpace(rawData))
-                    return false;
-
-                _writer.WriteLine(rawData);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            catch { return null; }
         }
 
         public bool SendMessage(MessagePacket packet)
         {
             try
             {
-                if (packet == null)
-                    return false;
-
+                if (!IsConnected || packet == null) return false;
                 string json = JsonParser.Serialize(packet);
-                return SendRaw(json);
+                _writer.WriteLine(json);
+                return true;
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
         }
 
         public void Close()
         {
-            try { _reader?.Close(); } catch { }
-            try { _writer?.Close(); } catch { }
-            try { _networkStream?.Close(); } catch { }
-            try { _tcpClient?.Close(); } catch { }
-
-            try { _reader?.Dispose(); } catch { }
-            try { _writer?.Dispose(); } catch { }
-            try { _networkStream?.Dispose(); } catch { }
-            try { _tcpClient?.Dispose(); } catch { }
+            try { _reader?.Close(); _writer?.Close(); _networkStream?.Close(); _tcpClient?.Close(); } catch { }
         }
     }
 }
