@@ -1,4 +1,4 @@
-﻿using _1_SharedLibrary.Models;
+using _1_SharedLibrary.Models;
 using _3_ChatClient.Network;
 using System;
 using System.Drawing;
