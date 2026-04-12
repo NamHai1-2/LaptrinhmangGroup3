@@ -66,6 +66,22 @@ namespace _3_ChatClient.UI
 
         private async Task HandleSubmitAsync()
         {
+            string username = _usernameTextBox.Text.Trim();
+            string password = _passwordTextBox.Text.Trim();
+
+            
+            if (username.Length < 1)
+            {
+                MessageBox.Show("Tên tài khoản không được để trống!","lỗi nhập liệu ");
+                return;
+            }
+
+            
+            if (string.IsNullOrEmpty(password) || password.Length < 1)
+            {
+                MessageBox.Show("Mật khẩu không được để trống!","lỗi bảo mật");
+                return;
+            }
             if (string.IsNullOrWhiteSpace(_ipTextBox.Text) || !int.TryParse(_portTextBox.Text, out int port))
             {
                 MessageBox.Show("IP hoặc Port không hợp lệ!"); return;
@@ -86,14 +102,42 @@ namespace _3_ChatClient.UI
 
         private void OnServerMessageReceived(MessagePacket packet)
         {
-            this.Invoke(new Action(() => {
+            if (this.IsDisposed) return;
+
+            this.Invoke(new Action(() =>
+            {
                 if (packet.Command == CommandType.LoginSuccess)
                 {
-                    new MainChatForm(_clientHelper).Show();
-                    this.Hide();
+                    _statusLabel.Text = "Success!";
+                    OpenMainChatForm();
                 }
-                else if (packet.Command == CommandType.LoginFail) MessageBox.Show("Thất bại!");
+                else if (packet.Command == CommandType.LoginFail)
+                {
+                    _statusLabel.Text = "Login Failed!";
+                    MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (packet.Command == CommandType.RegisterSuccess)
+                {
+                    
+                    MessageBox.Show("Đăng ký thành công! Bạn có thể đăng nhập ngay.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ToggleMode(); 
+                }
+                
+                else if (packet.Command == CommandType.RegisterFail)
+                {
+                    
+                    _statusLabel.Text = "Registration Failed!";
+                    MessageBox.Show("Tên tài khoản này đã có người sử dụng. Vui lòng chọn tên khác!", "Lỗi Đăng Ký", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }));
+        }
+        private void OpenMainChatForm()
+        {
+            MainChatForm mainChatForm = new MainChatForm(_clientHelper);
+
+            mainChatForm.FormClosed += (sender, e) => this.Close();
+            mainChatForm.Show();
+            this.Hide();
         }
     }
 }

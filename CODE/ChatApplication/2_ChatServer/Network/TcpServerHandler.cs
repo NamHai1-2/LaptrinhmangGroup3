@@ -35,9 +35,11 @@ namespace _2_ChatServer.Network
                 }
             }
             catch (Exception ex)
-            if (!ex.Message.Contains("aborted") && !ex.Message.Contains("WSACancelBlockingCall"))
             {
-                OnLogEvent?.Invoke($"[LỖI SERVER] {ex.Message}");
+                if (!ex.Message.Contains("aborted") && !ex.Message.Contains("WSACancelBlockingCall"))
+                {
+                    OnLogEvent?.Invoke($"[LỖI SERVER] {ex.Message}");
+                }
             }
         }
 
