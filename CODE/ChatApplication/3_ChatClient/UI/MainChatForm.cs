@@ -109,7 +109,6 @@ namespace _3_ChatClient.UI
                 BorderStyle = BorderStyle.None
             };
 
-            // Menu chuột phải để Chat Riêng
             _userContextMenu = new ContextMenuStrip();
             var menuPrivate = new ToolStripMenuItem("Chat Riêng (Private)");
             menuPrivate.Click += (s, e) => StartPrivateChat();
@@ -137,7 +136,7 @@ namespace _3_ChatClient.UI
             var bottomInputPanel = new Panel
             {
                 Dock = DockStyle.Bottom,
-                Height = 55,
+                Height = 75,
                 Padding = new Padding(10, 5, 10, 10)
             };
 
@@ -155,7 +154,10 @@ namespace _3_ChatClient.UI
             _messageTextBox = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
+                Multiline = true,
+                WordWrap = true,
+                ScrollBars = ScrollBars.Vertical
             };
 
             bottomInputPanel.Controls.Add(_messageTextBox);
@@ -272,29 +274,48 @@ namespace _3_ChatClient.UI
                 }
             }));
         }
-
-        private void AddMessageToDisplay(string message, string time, bool isMe)
-        {
-            ChatBubble bubble = new ChatBubble();
-            bubble.AutoSize = true;
-            bubble.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            bubble.MinimumSize = new Size(100, 40);
-            bubble.MaximumSize = new Size(_pnlChatBoard.Width - 60, 0);
-
-            bubble.SetMessage(message, time, isMe);
-            _pnlChatBoard.Controls.Add(bubble);
-            _pnlChatBoard.ScrollControlIntoView(bubble);
-        }
-
         private void UpdateUsersList(string userString)
         {
             _usersListBox.Items.Clear();
             if (string.IsNullOrEmpty(userString)) return;
+
             string[] users = userString.Split(',');
             foreach (var u in users)
             {
                 _usersListBox.Items.Add(u + " (Online)");
             }
+        }
+
+        private void AddMessageToDisplay(string message, string time, bool isMe)
+        {
+            ChatBubble bubble = new ChatBubble();
+            bubble.SetMessage(message, time, isMe);
+            bubble.AutoSize = true;
+            bubble.MaximumSize = new Size(_pnlChatBoard.Width - 100, 0);
+
+            int bubbleWidth = bubble.PreferredSize.Width;
+            int bubbleHeight = bubble.PreferredSize.Height;
+            bubble.Size = new Size(bubbleWidth, bubbleHeight);
+
+            Panel wrapper = new Panel();
+            wrapper.Width = _pnlChatBoard.Width - 30; 
+            wrapper.Height = bubbleHeight; 
+            wrapper.Margin = new Padding(0, 5, 0, 5); 
+
+            if (isMe)
+            {
+                bubble.Left = wrapper.Width - bubbleWidth;
+                bubble.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            }
+            else
+            {
+                bubble.Left = 0;
+                bubble.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            }
+
+            wrapper.Controls.Add(bubble);
+            _pnlChatBoard.Controls.Add(wrapper);
+            _pnlChatBoard.ScrollControlIntoView(wrapper);
         }
 
         protected override async void OnFormClosing(FormClosingEventArgs e)

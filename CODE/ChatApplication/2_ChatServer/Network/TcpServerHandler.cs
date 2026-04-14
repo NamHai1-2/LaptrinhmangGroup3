@@ -16,14 +16,14 @@ namespace _2_ChatServer.Network
         private DatabaseHelper _db = new DatabaseHelper();
         public Action<string> OnLogEvent;
 
-        public async Task StartServerAsync()
+        public async Task StartServerAsync(int port)
         {
             try
             {
                 _db.Initialize();
-                _server = new TcpListener(IPAddress.Any, Constants.SERVER_PORT);
+                _server = new TcpListener(IPAddress.Any, port);
                 _server.Start();
-                OnLogEvent?.Invoke($"[HỆ THỐNG] Server khởi động tại Port {Constants.SERVER_PORT}");
+                OnLogEvent?.Invoke($"[HỆ THỐNG] Server khởi động tại Port {port}");
 
                 while (true)
                 {

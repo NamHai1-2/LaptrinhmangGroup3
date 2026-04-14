@@ -30,7 +30,6 @@ namespace _3_ChatClient.UI
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(240, 240, 240);
 
-            // Các nhãn và ô nhập
             AddLabel("IP Server:", 100);
             _ipTextBox = new TextBox { Text = "127.0.0.1", Location = new Point(120, 97), Size = new Size(230, 25) };
 
@@ -69,37 +68,48 @@ namespace _3_ChatClient.UI
             string username = _usernameTextBox.Text.Trim();
             string password = _passwordTextBox.Text.Trim();
 
-            
             if (username.Length < 1)
             {
-                MessageBox.Show("Tên tài khoản không được để trống!","lỗi nhập liệu ");
+                MessageBox.Show("Tên tài khoản phải có ít nhất 1 ký tự!", "Lỗi nhập liệu");
                 return;
             }
 
-            
             if (string.IsNullOrEmpty(password) || password.Length < 1)
             {
-                MessageBox.Show("Mật khẩu không được để trống!","lỗi bảo mật");
+                MessageBox.Show("Mật khẩu không được để trống và phải có ít nhất 1 ký tự!", "Lỗi bảo mật");
                 return;
             }
+
             if (string.IsNullOrWhiteSpace(_ipTextBox.Text) || !int.TryParse(_portTextBox.Text, out int port))
             {
-                MessageBox.Show("IP hoặc Port không hợp lệ!"); return;
+                MessageBox.Show("IP hoặc Port không hợp lệ!");
+                return;
             }
 
-            _clientHelper.CurrentUsername = _usernameTextBox.Text.Trim();
+            _statusLabel.Text = "Đang tìm kiếm Server...";
+            _clientHelper.CurrentUsername = username;
+
             bool isConnected = await _clientHelper.ConnectAsync(_ipTextBox.Text, port);
-            if (!isConnected) return;
+
+            if (!isConnected)
+            {
+                _statusLabel.Text = "Kết nối thất bại!";
+                MessageBox.Show($"Không thể tìm thấy Server tại địa chỉ {_ipTextBox.Text} : {port}.\n\nVui lòng kiểm tra lại xem Server đã được Start chưa, hoặc thông tin IP/Port có bị sai lệch không!",
+                                "Lỗi Mạng (Connection Refused)",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                return;
+            }
 
             var packet = new MessagePacket
             {
                 Command = _isRegistrationMode ? CommandType.Register : CommandType.Login,
-                Sender = _usernameTextBox.Text,
-                Content = _passwordTextBox.Text
+                Sender = username,
+                Content = password
             };
             await _clientHelper.SendMessageAsync(packet);
         }
-
+        
         private void OnServerMessageReceived(MessagePacket packet)
         {
             if (this.IsDisposed) return;

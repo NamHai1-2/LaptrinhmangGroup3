@@ -69,11 +69,17 @@ namespace _2_ChatServer.UI
 
         private async void BtnStartServer_Click(object sender, EventArgs e)
         {
+            if (!int.TryParse(txtPort.Text.Trim(), out int port))
+            {
+                MessageBox.Show("Vui lòng nhập Port là một con số hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             btnStartServer.Enabled = false;
             btnStopServer.Enabled = true;
             lblStatus.Text = "Status: Running...";
             lblStatus.ForeColor = Color.Green;
-            await _serverHandler.StartServerAsync();
+            await _serverHandler.StartServerAsync(port);
         }
 
         private void AppendLog(string message)
