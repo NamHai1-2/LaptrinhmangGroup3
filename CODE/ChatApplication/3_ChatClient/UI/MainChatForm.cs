@@ -15,7 +15,7 @@ namespace _3_ChatClient.UI
 
         private ListBox _usersListBox;
         private FlowLayoutPanel _pnlChatBoard;
-        private TextBox _messageTextBox;
+        private RichTextBox _messageTextBox;
         private Button _sendButton;
         private Label _statusLabel;
         private Label _chatModeLabel;
@@ -27,6 +27,14 @@ namespace _3_ChatClient.UI
             _clientHelper = clientHelper;
             InitializeComponent();
             SetupEventHandlers();
+            _clientHelper.ServerDisconnected += () =>
+            {
+                this.Invoke(new Action(() => {
+                    MessageBox.Show("Mất kết nối tới Server! Máy chủ đã đóng hoặc mạng có vấn đề.", "Lỗi Mạng Nghiêm Trọng", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit(); 
+                }));
+            };
+        
         }
 
         private void InitializeComponent()
@@ -136,8 +144,8 @@ namespace _3_ChatClient.UI
             var bottomInputPanel = new Panel
             {
                 Dock = DockStyle.Bottom,
-                Height = 75,
-                Padding = new Padding(10, 5, 10, 10)
+                Height = 100,
+                Padding = new Padding(10, 10, 10, 10)
             };
 
             _sendButton = new Button
@@ -151,13 +159,13 @@ namespace _3_ChatClient.UI
                 Font = new Font("Segoe UI", 10, FontStyle.Bold)
             };
 
-            _messageTextBox = new TextBox
-            {
+            _messageTextBox = new RichTextBox() 
+            { 
                 Font = new Font("Segoe UI", 11),
                 Dock = DockStyle.Fill,
                 Multiline = true,
                 WordWrap = true,
-                ScrollBars = ScrollBars.Vertical
+                ScrollBars = RichTextBoxScrollBars.Vertical
             };
 
             bottomInputPanel.Controls.Add(_messageTextBox);
@@ -178,6 +186,18 @@ namespace _3_ChatClient.UI
             mainSplitContainer.Panel2.Controls.Add(_chatModeLabel);
 
             this.ResumeLayout(false);
+            _pnlChatBoard.SizeChanged += (sender, e) =>
+            {
+                _pnlChatBoard.SuspendLayout();
+                foreach (Control ctrl in _pnlChatBoard.Controls)
+                {
+                    if (ctrl is Panel wrapper)
+                    {
+                        wrapper.Width = _pnlChatBoard.ClientSize.Width - 25;
+                    }
+                }
+                _pnlChatBoard.ResumeLayout();
+            };
         }
 
         private void SetupEventHandlers()

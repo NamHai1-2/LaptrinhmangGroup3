@@ -1,4 +1,4 @@
-💬 Chat Application - TCP/IP Socket Programming
+UDM\_08\_ Lập trình ứng dụng chat (GUI) via TCP
 📝 Giới thiệu dự án
 Đây là ứng dụng trò chuyện trực tuyến (Chat Application) được xây dựng trên nền tảng C# WinForms sử dụng kiến trúc Client-Server qua giao thức TCP/IP. Dự án được thiết kế theo mô hình phân lớp nhằm tối ưu hóa việc quản lý mã nguồn và luồng dữ liệu giữa các thành viên trong nhóm.
 
