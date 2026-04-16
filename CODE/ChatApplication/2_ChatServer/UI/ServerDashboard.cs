@@ -89,6 +89,12 @@ namespace _2_ChatServer.UI
                 Invoke(new Action<string>(AppendLog), message);
                 return;
             }
+
+            if (message.Length > 70) 
+            {
+                message = message.Substring(0, 70) + "... (tin nhắn quá dài)";
+            }
+
             lstLogs.Items.Add($"[{DateTime.Now:HH:mm:ss}] {message}");
             if (lstLogs.Items.Count > 0)
                 lstLogs.TopIndex = lstLogs.Items.Count - 1;

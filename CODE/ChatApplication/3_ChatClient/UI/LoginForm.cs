@@ -65,6 +65,7 @@ namespace _3_ChatClient.UI
 
         private async Task HandleSubmitAsync()
         {
+
             string username = _usernameTextBox.Text.Trim();
             string password = _passwordTextBox.Text.Trim();
 
@@ -107,6 +108,24 @@ namespace _3_ChatClient.UI
                 Sender = username,
                 Content = password
             };
+            if (!System.Net.IPAddress.TryParse(_ipTextBox.Text, out _))
+            {
+                MessageBox.Show("Địa chỉ IP không đúng định dạng (Ví dụ chuẩn: 127.0.0.1)!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _statusLabel.Text = "Đang tìm kiếm Server...";
+
+            if (!isConnected)
+            {
+                _statusLabel.Text = "Kết nối thất bại!";
+                MessageBox.Show("Không thể tìm thấy Server! Vui lòng kiểm tra lại IP/Port.", "Lỗi Mạng", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else
+            {
+                MessageBox.Show("Đã kết nối tới Server thành công! Đang tiến hành xác thực...", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             await _clientHelper.SendMessageAsync(packet);
         }
         

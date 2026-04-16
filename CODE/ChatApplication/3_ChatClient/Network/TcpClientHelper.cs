@@ -15,10 +15,12 @@ namespace _3_ChatClient.Network
         private StreamReader _reader;
         private StreamWriter _writer;
         private CancellationTokenSource _cts;
+        
 
         public string CurrentUsername { get; set; }
         public bool IsConnected => _tcpClient != null && _tcpClient.Connected;
 
+        public event Action ServerDisconnected;
         public event Action<MessagePacket> OnMessageReceived;
         public event Action<string> OnStatusChanged;
 
@@ -55,13 +57,24 @@ namespace _3_ChatClient.Network
                 while (!token.IsCancellationRequested && IsConnected)
                 {
                     string rawData = await _reader.ReadLineAsync();
-                    if (rawData == null) break;
+                    
+                    if (rawData == null)
+                    {
+                        ServerDisconnected?.Invoke(); 
+                        break; 
+                    }
 
                     var packet = JsonParser.Deserialize<MessagePacket>(rawData);
                     if (packet != null) OnMessageReceived?.Invoke(packet);
-                }
+
+                }          
+
+                    
             }
-            catch { }
+            catch
+            {
+                ServerDisconnected?.Invoke();
+            }
             finally { Disconnect(); }
         }
 

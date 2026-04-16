@@ -88,7 +88,7 @@ namespace _2_ChatServer.Network
                     }
                     else if (packet.Command == CommandType.PrivateMessage)
                     {
-                        packet.Sender = client.Username; // Khóa cứng tên để bảo mật
+                        packet.Sender = client.Username; 
                         OnLogEvent?.Invoke($"[CHAT RIÊNG] {packet.Sender} -> {packet.Receiver}: {packet.Content}");
                         SendPrivate(packet.Receiver, packet);
                     }
