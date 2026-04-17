@@ -1,11 +1,11 @@
 UDM\_08\_ Lập trình ứng dụng chat (GUI) via TCP
 
-📝 Giới thiệu dự án
+Giới thiệu dự án
 Đây là ứng dụng trò chuyện trực tuyến (Chat Application) được xây dựng trên nền tảng C# WinForms sử dụng kiến trúc Client-Server qua giao thức TCP/IP. Dự án được thiết kế theo mô hình phân lớp nhằm tối ưu hóa việc quản lý mã nguồn và luồng dữ liệu giữa các thành viên trong nhóm.
 
 
 
-🚀 Các tính năng chính
+Các tính năng chính
 Hệ thống Tài khoản: Hỗ trợ Đăng ký tài khoản mới và Đăng nhập xác thực qua Database.
 
 Chat Tổng (Broadcast): Gửi tin nhắn công khai cho tất cả mọi người đang online trong hệ thống.
@@ -20,7 +20,7 @@ Quản lý Server: Giao diện Dashboard cho phép Start/Stop server và theo d�
 
 
 
-🛠 Công nghệ sử dụng
+Công nghệ sử dụng
 Ngôn ngữ: C# (.NET Core/Framework).
 
 Giao diện: Windows Forms (WinForms).
@@ -33,7 +33,7 @@ Cơ sở dữ liệu: SQLite (Microsoft.Data.Sqlite) để lưu trữ thông tin
 
 
 
-📂 Cấu trúc thư mục
+Cấu trúc thư mục
 \_1\_SharedLibrary: Chứa các Model dữ liệu (MessagePacket, User) và các tiện ích dùng chung (JsonParser, Constants).
 
 \_2\_ChatServer: Chứa logic xử lý tại máy chủ, quản lý kết nối và tương tác Database.
